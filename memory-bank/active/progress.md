@@ -50,3 +50,16 @@ Fix every finding in `.slobac/2026-09-23T19-16-57/audit.md` using that report's 
     - Write the scope-builder `around` hook with `do`/`end`
 * Insights
     - The brace form of `around` with `ensure` is a SyntaxError on this Ruby
+
+## 2026-09-23 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Re-validated the revised Level 2 plan against the audit, the specs, Body/Hooks/scope_builders, and Jekyll 4.4.1 / Liquid 4.0.4
+    - Wrote `memory-bank/active/.preflight-status`; first line is `PASS WITH ADVISORY`
+* Decisions made
+    - Pass the gate: unit 3's `stats_table` include of `page.path` and unit 6's strip-tags `puts :hi` both hold with no lib/ change
+    - Do not edit the plan; the nested-path / fold-into-unit-2 idea is advisory
+* Insights
+    - `LiquidRenderer#file` records the normalized path on every call; `profile: true` is not required
+    - After tag strip, the highlight sidecar text is `puts :hi\n`
+    - On a root `marked.md`, `page.path` equals `page.name`, so the scheduled `stats_table` oracle would not kill a `item.path` → `item.name` mutant
