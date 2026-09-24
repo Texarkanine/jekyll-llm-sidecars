@@ -36,6 +36,17 @@ Fix three review crashes (date sort, nil categories, extensionless sidecar paths
 * Insights
     - `permalink: /about` is the URL `/about` under Jekyll 4.4.1
 
+## 2026-09-24 - REFLECT - COMPLETE
+
+* Work completed
+    - Wrote `memory-bank/active/reflection/reflection-fix-review-crashes.md`
+    - Left productContext, systemPatterns, and techContext unchanged
+* Decisions made
+    - The three coercions stay at the methods that read the foreign values
+* Insights
+    - `Date <=> Time` is nil here, and `Hash#fetch` does not replace a present nil
+
+
 
 ## 2026-09-24 - PREFLIGHT - COMPLETE
 
