@@ -33,13 +33,13 @@
 1. Stub tests: add examples "excludes a directory index written with a double-star glob" and "excludes a one-segment path written with a double-star glob".
 2. Stub interface: none. `Census` and `Configuration#exclude` already exist.
 3. Write tests and run red: a page at `/tags/index.html` and a page at `/error/404.html` drop out when exclude is `["/tags/**/*"]` and `["/error/**/*"]`. Run those examples.
-4. Write code and run green: pass `File::FNM_EXTGLOB | File::FNM_PATHNAME` to `File.fnmatch?` in `excluded?`. Run `bundle exec rspec spec/census_spec.rb`.
+4. Write code and run green: pass `File::FNM_EXTGLOB | File::FNM_PATHNAME` to `File.fnmatch?` in `excluded?`. Change `Configuration::DEFAULT_EXCLUDE` from `/assets/**` to `/assets/**/*`, and update that spelling in `README.md` and `spec/configuration_spec.rb`. Run `bundle exec rspec spec/census_spec.rb spec/configuration_spec.rb`.
 
 ### 2. Separate corpus documents with two newlines — executable
 
 - Files: `lib/jekyll/llms_txt/generator.rb`, `spec/generator_spec.rb`, `README.md`
 
-1. Stub tests: change the two root join examples that expect `"A\n\nB\n"` and `"A\nB"`.
+1. Stub tests: change the root join examples that expect `"A\n\nB\n"`, `"A\nB"`, and the seven-body `"with one newline"` corpus in `spec/generator_spec.rb`. Rename that example so it no longer says "one newline".
 2. Stub interface: none. `Generator#render_row` already joins corpus bodies.
 3. Write tests and run red: both examples expect `"A\n\nB"`. Run them.
 4. Write code and run green: chomp trailing newlines on each body and `join("\n\n")` for the root corpus (`scope.path_prefix == "/"`). Update the README sentence that says corpora are joined by one newline and are not chomped. Run those examples.
@@ -64,7 +64,7 @@ No new technology - validation not required.
 
 ## Challenges & Mitigations
 
-- `FNM_EXTGLOB` can change older globs such as `/*.xml`: keep the existing exclude examples and run `spec/census_spec.rb` after the flag change.
+- `FNM_PATHNAME` makes the shipped default `/assets/**` miss `/assets/nested/note.md`. The default, the README, and the configuration spec move to `/assets/**/*`, which still matches those paths under the new flags.
 - A body that is only newlines becomes an empty string after chomp, so two empty documents become `"\n\n"` or `"# T\n\n\n\n# U"`. Assert the headed example with normal one-line bodies.
 - Collection corpora such as `/garden/llms-full.txt` use the same non-root path, so they gain H1s too. That is the same rule as tags and categories.
 

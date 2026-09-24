@@ -4,10 +4,9 @@
 **Phase:** PLAN - COMPLETE
 
 ## What Was Done
-- Wrote the Level 2 plan for `exclude-globs-corpus-headings`
-- Each non-root corpus document gets an H1 of `entry.summary.name`. The root corpus stays body-only
-- Documents are separated by exactly two newlines
-- Exclude matching will pass `File::FNM_EXTGLOB | File::FNM_PATHNAME`
+- Revised the plan after preflight `FAIL (fixable)`
+- Default exclude `/assets/**` becomes `/assets/**/*`
+- The seven-body root corpus example is in the join-test update
 
 ## Next Step
 - Preflight validation
