@@ -1,0 +1,1 @@
+Rework plan: dest write via post_write plus clean hook; Liquid via Jekyll::Renderer#render_liquid; census uses collection.docs.

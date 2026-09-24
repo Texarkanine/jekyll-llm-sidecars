@@ -1,0 +1,1 @@
+Mutant ignores only const{name=Utils base=const{name=Jekyll}}: those spellings are one constant inside module Jekyll. list uses fetch after key?. mutation.timeout is 30s.

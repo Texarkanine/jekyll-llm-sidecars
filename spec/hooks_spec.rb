@@ -1,0 +1,148 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+
+RSpec.describe Jekyll::LlmsTxt::Hooks do
+  let(:layout) { "<!DOCTYPE html><html><head><title>x</title></head><body>{{ content }}</body></html>\n" }
+
+  def head(html)
+    html[%r{<head>.*?</head>}m]
+  end
+
+  describe "site post_render" do
+    it "points Markdown pages at their sidecar and skips HTML pages" do
+      site = process_site(
+        {
+          "_layouts/default.html" => layout,
+          "my-page.md" => "---\nlayout: default\n---\nPage body.\n",
+          "a.html" => "---\nlayout: default\ntitle: Hi\n---\n<p>Hi</p>\n"
+        },
+        "url" => "https://example.com",
+        "baseurl" => "/blog"
+      )
+
+      expect(head(read_dest(site, "/my-page.html"))).to include(
+        '<link rel="alternate" type="text/markdown" href="https://example.com/blog/my-page.md">'
+      )
+      expect(read_dest(site, "/a.html")).not_to include("text/markdown")
+    end
+
+    it "does not raise when a document output is nil" do
+      site = build_site({ "about.md" => page_body(title: "About") }, "url" => "https://example.com")
+      page = site.pages.find { |candidate| candidate.name == "about.md" }
+      page.output = nil
+      site.instance_variable_set(
+        :@llms_txt,
+        Jekyll::LlmsTxt::BuildState.new(
+          hrefs: { page => "https://example.com/about.md" },
+          files: []
+        )
+      )
+
+      expect { described_class.inject(site) }.not_to raise_error
+    end
+
+    it "links a later page when an earlier page output is nil" do
+      site = process_site(
+        {
+          "_layouts/default.html" => layout,
+          "a.md" => "---\nlayout: default\n---\nA\n",
+          "z.md" => "---\nlayout: default\n---\nZ\n"
+        },
+        "url" => "https://example.com"
+      )
+      documents = site.pages + site.documents
+      documents[0].output = nil
+      documents[1].output = layout.dup
+
+      described_class.inject(site)
+
+      expect(documents[1].output).to include('rel="alternate"')
+    end
+
+    it "writes a nested category index into the destination" do
+      site = process_site(
+        {
+          "_posts/2020-01-02-hello.md" => "---\ntitle: Hello\ncategories: [record]\n---\nHi\n"
+        },
+        "url" => "https://example.com",
+        "llms-txt" => { "categories" => true }
+      )
+
+      expect(read_dest(site, "/category/record/llms.txt")).to include("Hello")
+    end
+
+    it "keeps llms.txt and deletes a file this plugin did not write" do
+      site = process_site(
+        { "a.md" => "---\ntitle: A\n---\nA\n" },
+        "url" => "https://example.com"
+      )
+      leftover = File.join(site.dest, "old.txt")
+      File.write(leftover, "old")
+
+      site.generate
+      site.cleanup
+
+      expect(File.exist?(File.join(site.dest, "llms.txt"))).to be true
+      expect(File.exist?(leftover)).to be false
+    end
+
+    it "deletes an obsolete file when no destinations were recorded" do
+      site = process_site(
+        { "a.md" => "---\ntitle: A\n---\nA\n" },
+        "url" => "https://example.com"
+      )
+      Jekyll::LlmsTxt.current_destinations = nil
+      leftover = File.join(site.dest, "old.txt")
+      File.write(leftover, "old")
+
+      site.cleanup
+
+      expect(File.exist?(leftover)).to be false
+    end
+
+    it "writes nothing when no build was stored" do
+      site = build_site("about.md" => page_body(title: "About"))
+
+      expect { described_class.write(site) }.not_to raise_error
+      expect(File.exist?(File.join(site.dest, "llms.txt"))).to be false
+    end
+
+    it "leaves the site alone when no build was stored" do
+      site = build_site("about.md" => page_body(title: "About"))
+
+      expect { described_class.inject(site) }.not_to raise_error
+    end
+
+    it "still links a later page when an earlier page has no head" do
+      site = process_site(
+        {
+          "_layouts/default.html" => layout,
+          "a.md" => "---\n---\nNo head.\n",
+          "z.md" => "---\nlayout: default\n---\nHas head.\n"
+        },
+        "url" => "https://example.com"
+      )
+
+      expect(head(read_dest(site, "/z.html"))).to include("text/markdown")
+    end
+
+    it "links a post and a collection document once each" do
+      site = process_site(
+        {
+          "_layouts/default.html" => layout,
+          "_posts/2020-01-04-later.md" => "---\nlayout: default\n---\nLater.\n",
+          "_garden/note.md" => "---\nlayout: default\n---\nNote.\n"
+        },
+        "url" => "https://example.com",
+        "baseurl" => "/blog",
+        "permalink" => "/:year/:month/:day/:title:output_ext",
+        "collections" => { "garden" => { "output" => true } },
+        "llms-txt" => { "include" => %w[pages posts garden] }
+      )
+
+      expect(head(read_dest(site, "/2020/01/04/later.html")).scan("text/markdown").size).to eq(1)
+      expect(head(read_dest(site, "/garden/note.html")).scan("text/markdown").size).to eq(1)
+    end
+  end
+end
