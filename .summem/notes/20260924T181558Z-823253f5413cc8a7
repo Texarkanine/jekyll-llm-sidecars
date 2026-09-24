@@ -1,0 +1,1 @@
+version_spec child uses with_unbundled_env plus parent LOAD_PATH and an empty GEM_HOME. A partial env hash to Open3 inherits BUNDLER_SETUP.
