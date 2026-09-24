@@ -3,7 +3,7 @@ name: "Release PR"
 on:
   pull_request:
     paths:
-      - 'lib/jekyll-llms-txt/version.rb'
+      - 'lib/jekyll-llm-sidecars/version.rb'
 
 permissions:
   contents: write

@@ -12,7 +12,7 @@ requires:
 
 matcher:
   subjects:
-    - JekyllLlmsTxt*
+    - JekyllLlmSidecars*
 
 mutation:
   # A neutral that runs the generator suite can exceed the 5s default.

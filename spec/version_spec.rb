@@ -5,7 +5,7 @@ require "spec_helper"
 
 # Bundler loads the gemspec, which defines the module before any example
 # runs. A fresh process is the only way to see what each require path loads.
-RSpec.describe JekyllLlmsTxt do
+RSpec.describe JekyllLlmSidecars do
   def child_require(script)
     lib = File.expand_path("../lib", __dir__)
     # An empty gem home matches CI, where Jekyll exists only inside the bundle.
@@ -20,24 +20,24 @@ RSpec.describe JekyllLlmsTxt do
   end
 
   it "is defined after the suite loads and the nested constant is not" do
-    expect(defined?(Jekyll::LlmsTxt)).to be_nil
-    expect(defined?(JekyllLlmsTxt::VERSION)).to eq("constant")
+    expect(defined?(Jekyll::LlmSidecars)).to be_nil
+    expect(defined?(JekyllLlmSidecars::VERSION)).to eq("constant")
   end
 
-  describe "require \"jekyll-llms-txt\"" do
-    it "defines JekyllLlmsTxt" do
+  describe "require \"jekyll-llm-sidecars\"" do
+    it "defines JekyllLlmSidecars" do
       _stdout, _stderr, status = child_require(
-        "abort 'nested' if defined?(Jekyll::LlmsTxt); " \
-        "abort 'preloaded' if defined?(JekyllLlmsTxt); " \
-        "require 'jekyll-llms-txt'; exit(defined?(JekyllLlmsTxt) == 'constant')"
+        "abort 'nested' if defined?(Jekyll::LlmSidecars); " \
+        "abort 'preloaded' if defined?(JekyllLlmSidecars); " \
+        "require 'jekyll-llm-sidecars'; exit(defined?(JekyllLlmSidecars) == 'constant')"
       )
       expect(status).to be_success
     end
   end
 
-  describe "require \"jekyll/llms_txt\"" do
+  describe "require \"jekyll/llm_sidecars\"" do
     it "raises LoadError" do
-      _stdout, stderr, status = child_require("require 'jekyll/llms_txt'")
+      _stdout, stderr, status = child_require("require 'jekyll/llm_sidecars'")
       expect(status).not_to be_success
       expect(stderr).to include("LoadError")
     end

@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe JekyllLlmsTxt::Summary do
+RSpec.describe JekyllLlmSidecars::Summary do
   describe ".line" do
     def line_for(item)
       described_class.line(item)

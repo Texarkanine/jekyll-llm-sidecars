@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe JekyllLlmsTxt::Entry do
+RSpec.describe JekyllLlmSidecars::Entry do
   let(:item) { Object.new }
   let(:summary_calls) { [] }
   let(:body_calls) { [] }

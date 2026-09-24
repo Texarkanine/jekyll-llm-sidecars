@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jekyll-llms-txt (0.1.0)
+    jekyll-llm-sidecars (0.1.0)
       jekyll (>= 4.0, < 5.0)
 
 GEM
@@ -253,7 +253,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  jekyll-llms-txt!
+  jekyll-llm-sidecars!
   mutant (~> 0.16)
   mutant-rspec (~> 0.16)
   rake (~> 13.3)

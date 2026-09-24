@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # One row per output path. A second insert for a path fails.
   class Manifest
     class Collision < StandardError; end

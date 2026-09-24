@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   def self.register_scope_builder(&block)
     scope_builders << block
   end
@@ -65,7 +65,7 @@ module JekyllLlmsTxt
     def category_prefix(name)
       archives = @site.config["jekyll-archives"] || {}
       template = archives.dig("permalinks", "category") || "/category/:name/"
-      slug = ::Jekyll::Utils.slugify(name, mode: archives["slug_mode"])
+      slug = Jekyll::Utils.slugify(name, mode: archives["slug_mode"])
       template.sub(":name", slug)
     end
 
@@ -94,7 +94,7 @@ module JekyllLlmsTxt
     end
 
     def custom_scopes
-      JekyllLlmsTxt.scope_builders.flat_map do |builder|
+      JekyllLlmSidecars.scope_builders.flat_map do |builder|
         result = builder.call(@site, @configuration, @entries)
         Array(result).select { |scope| scope && !scope.entries.empty? }
       end

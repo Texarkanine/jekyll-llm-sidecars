@@ -2,21 +2,21 @@
 
 require "spec_helper"
 
-RSpec.describe JekyllLlmsTxt::ScopeBuilder do
+RSpec.describe JekyllLlmSidecars::ScopeBuilder do
   around do |example|
-    saved = JekyllLlmsTxt.scope_builders.dup
-    JekyllLlmsTxt.scope_builders.clear
+    saved = JekyllLlmSidecars.scope_builders.dup
+    JekyllLlmSidecars.scope_builders.clear
     example.run
   ensure
-    JekyllLlmsTxt.scope_builders.replace(saved)
+    JekyllLlmSidecars.scope_builders.replace(saved)
   end
 
   def entries_for(site)
-    JekyllLlmsTxt::Census.call(site, JekyllLlmsTxt::Configuration.new(site))
+    JekyllLlmSidecars::Census.call(site, JekyllLlmSidecars::Configuration.new(site))
   end
 
   def scopes_for(site)
-    described_class.call(site, JekyllLlmsTxt::Configuration.new(site), entries_for(site))
+    described_class.call(site, JekyllLlmSidecars::Configuration.new(site), entries_for(site))
   end
 
   def scope_at(scopes, prefix)
@@ -52,11 +52,10 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
 
     def scoped_paths(items)
       entries = items.map do |item|
-        JekyllLlmsTxt::Entry.new(item: item, summary_computer: ->(_) {}, body_computer: ->(_) {})
+        JekyllLlmSidecars::Entry.new(item: item, summary_computer: ->(_) {}, body_computer: ->(_) {})
       end
-      JekyllLlmsTxt::Scope.new(path_prefix: "/", title: "", description: nil, entries: entries).entries.map do |entry|
-        entry.item.relative_path
-      end
+      scope = JekyllLlmSidecars::Scope.new(path_prefix: "/", title: "", description: nil, entries: entries)
+      scope.entries.map { |entry| entry.item.relative_path }
     end
 
     it "sorts an undated page with an epoch-dated document by path" do
@@ -105,7 +104,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
           "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [record]"),
           "_posts/2020-01-03-other.md" => page_body(title: "Other", extra: "categories: [record, news]")
         },
-        "llms_txt" => { "include_categories" => true }
+        "llm_sidecars" => { "include_categories" => true }
       )
       scopes = scopes_for(site)
       record = scope_at(scopes, "/category/record/")
@@ -120,7 +119,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
     it "uses the jekyll-archives category permalink and slug mode" do
       site = build_site(
         { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: 'categories: ["Hello World_X"]') },
-        "llms_txt" => { "include_categories" => true },
+        "llm_sidecars" => { "include_categories" => true },
         "jekyll-archives" => {
           "permalinks" => { "category" => "/archive/:name/" },
           "slug_mode" => "raw"
@@ -133,7 +132,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
     it "uses /category/:name/ when archives does not set a permalink" do
       site = build_site(
         { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: 'categories: ["Hello World"]') },
-        "llms_txt" => { "include_categories" => true }
+        "llm_sidecars" => { "include_categories" => true }
       )
 
       expect(scope_at(scopes_for(site), "/category/hello-world/").title).to eq("Hello World")
@@ -142,7 +141,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
     it "skips a category whose documents were all filtered out" do
       site = build_site(
         { "_posts/2020-01-02-hidden.md" => page_body(title: "Hidden", extra: "llms: false\ncategories: [secret]") },
-        "llms_txt" => { "include_categories" => true }
+        "llm_sidecars" => { "include_categories" => true }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -152,7 +151,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
       site = build_site(
         { "_garden/note.md" => page_body(title: "Note") },
         "collections" => { "garden" => { "output" => true } },
-        "llms_txt" => { "include_paths" => %w[pages posts garden] }
+        "llm_sidecars" => { "include_paths" => %w[pages posts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -166,7 +165,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
           "_posts/2020-01-02-hello.md" => page_body(title: "Hello")
         },
         "collections" => { "garden" => { "output" => true } },
-        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
+        "llm_sidecars" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
       )
       garden = scope_at(scopes_for(site), "/garden/")
 
@@ -180,7 +179,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
       site = build_site(
         { "_garden/note.md" => page_body(title: "Note") },
         "collections" => { "garden" => { "output" => false } },
-        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
+        "llm_sidecars" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).not_to include("/garden/")
@@ -193,7 +192,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
           "drafts" => { "output" => false },
           "garden" => { "output" => true }
         },
-        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts missing drafts garden] }
+        "llm_sidecars" => { "include_collections" => true, "include_paths" => %w[pages posts missing drafts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/", "/garden/"])
@@ -203,7 +202,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
       site = build_site(
         { "about.md" => page_body(title: "About") },
         "collections" => { "garden" => { "output" => true } },
-        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
+        "llm_sidecars" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -213,12 +212,12 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
       site = build_site(
         { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [record]") },
         "collections" => { "posts" => { "output" => true } },
-        "llms_txt" => { "include_categories" => true, "include_collections" => true }
+        "llm_sidecars" => { "include_categories" => true, "include_collections" => true }
       )
       census = entries_for(site)
-      JekyllLlmsTxt.register_scope_builder do |_site, _configuration, entries|
+      JekyllLlmSidecars.register_scope_builder do |_site, _configuration, entries|
         [
-          JekyllLlmsTxt::Scope.new(
+          JekyllLlmSidecars::Scope.new(
             path_prefix: "/tags/record/",
             title: "record",
             description: "Tag: record",
@@ -226,7 +225,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
           )
         ]
       end
-      scopes = described_class.call(site, JekyllLlmsTxt::Configuration.new(site), census)
+      scopes = described_class.call(site, JekyllLlmSidecars::Configuration.new(site), census)
       hello = census.find { |entry| entry.item.data["title"] == "Hello" }
 
       expect(scope_at(scopes, "/category/record/").entries).to include(hello)
@@ -236,9 +235,9 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
     it "passes the site, configuration, and census array to a registered builder" do
       site = build_site("about.md" => page_body(title: "About"))
       census = entries_for(site)
-      configuration = JekyllLlmsTxt::Configuration.new(site)
+      configuration = JekyllLlmSidecars::Configuration.new(site)
       seen = nil
-      JekyllLlmsTxt.register_scope_builder do |received_site, received_configuration, received_entries|
+      JekyllLlmSidecars.register_scope_builder do |received_site, received_configuration, received_entries|
         seen = [received_site, received_configuration, received_entries]
         []
       end
@@ -254,8 +253,8 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
       site = build_site("about.md" => page_body(title: "About"))
       census = entries_for(site)
       constructed = nil
-      JekyllLlmsTxt.register_scope_builder do |_site, _configuration, entries|
-        constructed = JekyllLlmsTxt::Entry.new(
+      JekyllLlmSidecars.register_scope_builder do |_site, _configuration, entries|
+        constructed = JekyllLlmSidecars::Entry.new(
           item: entries.first.item,
           summary_computer: ->(_) { "other" },
           body_computer: ->(_) { "other" }
@@ -263,7 +262,7 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
         []
       end
 
-      described_class.call(site, JekyllLlmsTxt::Configuration.new(site), census)
+      described_class.call(site, JekyllLlmSidecars::Configuration.new(site), census)
 
       expect(constructed).to equal(census.first)
       expect(constructed.summary).to eq(census.first.summary)
@@ -271,8 +270,8 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
 
     it "adds no scope when a registered builder returns an empty scope" do
       site = build_site("about.md" => page_body(title: "About"))
-      JekyllLlmsTxt.register_scope_builder do |_site, _configuration, _entries|
-        JekyllLlmsTxt::Scope.new(path_prefix: "/empty/", title: "Empty", description: nil, entries: [])
+      JekyllLlmSidecars.register_scope_builder do |_site, _configuration, _entries|
+        JekyllLlmSidecars::Scope.new(path_prefix: "/empty/", title: "Empty", description: nil, entries: [])
       end
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -280,14 +279,14 @@ RSpec.describe JekyllLlmsTxt::ScopeBuilder do
 
     it "adds no scope when a registered builder returns nil" do
       site = build_site("about.md" => page_body(title: "About"))
-      JekyllLlmsTxt.register_scope_builder { [nil] }
+      JekyllLlmSidecars.register_scope_builder { [nil] }
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
     end
 
     it "adds no scope when a registered builder returns nothing" do
       site = build_site("about.md" => page_body(title: "About"))
-      JekyllLlmsTxt.register_scope_builder { |_site, _configuration, _entries| [] }
+      JekyllLlmSidecars.register_scope_builder { |_site, _configuration, _entries| [] }
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
     end

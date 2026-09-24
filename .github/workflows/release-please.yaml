@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  GEM_NAME: jekyll-llms-txt
+  GEM_NAME: jekyll-llm-sidecars
 
 jobs:
   release-please:

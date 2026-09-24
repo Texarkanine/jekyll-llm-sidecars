@@ -1,4 +1,4 @@
-# Contributing to jekyll-llms-txt
+# Contributing to jekyll-llm-sidecars
 
 ## Development Setup
 
@@ -10,8 +10,8 @@
 ### Clone and Setup
 
 ```bash
-git clone https://github.com/Texarkanine/jekyll-llms-txt.git
-cd jekyll-llms-txt
+git clone https://github.com/Texarkanine/jekyll-llm-sidecars.git
+cd jekyll-llm-sidecars
 bundle install
 ```
 

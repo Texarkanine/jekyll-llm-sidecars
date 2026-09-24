@@ -5,7 +5,7 @@
     "include-component-in-tag": false,
     "packages": {
         ".": {
-            "version-file": "lib/jekyll-llms-txt/version.rb",
+            "version-file": "lib/jekyll-llm-sidecars/version.rb",
             "pull-request-header": ":service_dog: I have created a release \\*bark\\* \\*woof\\*"
         }
     }

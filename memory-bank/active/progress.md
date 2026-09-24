@@ -24,6 +24,18 @@ Rename the gem `jekyll-llms-txt` to `jekyll-llm-sidecars` (gem, files, module `J
     - The site ivar `@llms_txt` becomes `@llm_sidecars`.
     - Keep the no-nested-namespace spec, retargeted to `jekyll/llm_sidecars`; add an old-`llms_txt`-key-ignored example by retargeting the existing "different config key" case.
 
+## 2026-09-24 - BUILD - COMPLETE
+
+* Work completed
+    - Specs retargeted and run red (LoadError on `jekyll-llm-sidecars`), then lib, gemspec, lockfile, Mutant, RuboCop, workflows, and release-please config renamed; green.
+    - README, CONTRIBUTING, systemPatterns, techContext renamed; final hidden-file sweep shows only the intentional `create_llms_txt` key and old-key spec.
+    - Verification: 133 examples, 100% line coverage, RuboCop clean, gem builds, Mutant 2569/2569.
+* Decisions made
+    - Skipped preflight's optional warning for a leftover `llms_txt:` block: the old name was never published.
+    - Dropped the redundant `::` in `::Jekyll::Utils.slugify` to kill a pre-existing equivalent Mutant survivor.
+* Insights
+    - The full Mutant run takes about two minutes on this machine; single-subject runs take seconds.
+
 ## 2026-09-24 - PREFLIGHT - COMPLETE
 
 * Work completed

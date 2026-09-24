@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require_relative "lib/jekyll-llms-txt/version"
+require_relative "lib/jekyll-llm-sidecars/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "jekyll-llms-txt"
-  spec.version = JekyllLlmsTxt::VERSION
+  spec.name = "jekyll-llm-sidecars"
+  spec.version = JekyllLlmSidecars::VERSION
   spec.authors = ["Texarkanine"]
   spec.email = ["texarkanine@protonmail.com"]
 
   spec.summary = "Jekyll plugin that publishes llms.txt indexes and Markdown sidecars"
   spec.description = "Jekyll plugin that produces llms.txt indexes, optional llms-full.txt " \
                      "corpora, and Markdown source sidecars for included pages."
-  spec.homepage = "https://github.com/Texarkanine/jekyll-llms-txt"
+  spec.homepage = "https://github.com/Texarkanine/jekyll-llm-sidecars"
   spec.license = "AGPL-3.0-or-later"
   spec.required_ruby_version = ">= 3.3.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/Texarkanine/jekyll-llms-txt"
-  spec.metadata["changelog_uri"] = "https://github.com/Texarkanine/jekyll-llms-txt/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/Texarkanine/jekyll-llm-sidecars"
+  spec.metadata["changelog_uri"] = "https://github.com/Texarkanine/jekyll-llm-sidecars/blob/main/CHANGELOG.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.files = Dir[

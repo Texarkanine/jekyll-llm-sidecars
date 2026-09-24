@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # Renders a document's source body once. Liquid runs. Converters and layouts do not.
   class Body
     # @param item [Jekyll::Page, Jekyll::Document]

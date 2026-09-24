@@ -1,6 +1,6 @@
-# jekyll-llms-txt
+# jekyll-llm-sidecars
 
-[![code coverage](https://codecov.io/gh/Texarkanine/jekyll-llms-txt/graph/badge.svg)](https://codecov.io/gh/Texarkanine/jekyll-llms-txt)
+[![code coverage](https://codecov.io/gh/Texarkanine/jekyll-llm-sidecars/graph/badge.svg)](https://codecov.io/gh/Texarkanine/jekyll-llm-sidecars)
 
 Publish an [`llms.txt`](https://llmstxt.org/) index and Markdown copies of your pages when Jekyll builds your site.
 
@@ -29,7 +29,7 @@ Add the gem to your `Gemfile`:
 
 ```ruby
 group :jekyll_plugins do
-  gem "jekyll-llms-txt"
+  gem "jekyll-llm-sidecars"
 end
 ```
 
@@ -39,7 +39,7 @@ Run:
 bundle install
 ```
 
-Jekyll loads every gem in the `jekyll_plugins` group. If you do not use that group, also add `jekyll-llms-txt` to the `plugins` list in `_config.yml`.
+Jekyll loads every gem in the `jekyll_plugins` group. If you do not use that group, also add `jekyll-llm-sidecars` to the `plugins` list in `_config.yml`.
 
 ## Usage
 
@@ -139,7 +139,7 @@ Collection files go in `/<label>/`.
 These are the default settings. You only need to add the keys that you want to change.
 
 ```yaml
-llms_txt:
+llm_sidecars:
   create_markdown: true
   create_llms_txt: true
   create_llms_full: false
@@ -187,13 +187,13 @@ This example makes a scope for each tag, in the directories that jekyll-archives
 
 ```ruby
 # _plugins/llms_tag_scopes.rb
-JekyllLlmsTxt.register_scope_builder do |site, _config, entries|
+JekyllLlmSidecars.register_scope_builder do |site, _config, entries|
   template = site.config.dig("jekyll-archives", "permalinks", "tag") || "/tags/:name/"
   site.tags.filter_map do |name, items|
     scoped = entries.select { |entry| items.include?(entry.item) }
     next if scoped.empty?
 
-    JekyllLlmsTxt::Scope.new(
+    JekyllLlmSidecars::Scope.new(
       path_prefix: template.sub(":name", Jekyll::Utils.slugify(name)),
       title: name,
       description: "Tag: #{name}",
@@ -205,7 +205,7 @@ end
 
 With this plugin, `/tags/foo/llms.txt` lists all posts with the tag `foo`.
 
-The block gets the site, the configuration, and the list of included entries. `entry.item` is the Jekyll page or document. The block returns a list of `JekyllLlmsTxt::Scope` objects. The plugin ignores `nil` values and scopes with no entries. `title` and `description` become the H1 and blockquote of that scope's `llms.txt`.
+The block gets the site, the configuration, and the list of included entries. `entry.item` is the Jekyll page or document. The block returns a list of `JekyllLlmSidecars::Scope` objects. The plugin ignores `nil` values and scopes with no entries. `title` and `description` become the H1 and blockquote of that scope's `llms.txt`.
 
 ## Troubleshooting
 

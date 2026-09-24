@@ -1,6 +1,6 @@
 # Tech Context
 
-Jekyll 4 plugin. The `jekyll` dependency is `>= 4.0`, `< 5.0` in `jekyll-llms-txt.gemspec`. Ruby is pinned in `.ruby-version`.
+Jekyll 4 plugin. The `jekyll` dependency is `>= 4.0`, `< 5.0` in `jekyll-llm-sidecars.gemspec`. Ruby is pinned in `.ruby-version`.
 
 ## Environment Setup
 
@@ -8,7 +8,7 @@ Install gems with Bundler, then run Ruby tools through `bundle exec`.
 
 ## Build Tools
 
-Bundler, configured by `Gemfile` and `jekyll-llms-txt.gemspec`.
+Bundler, configured by `Gemfile` and `jekyll-llm-sidecars.gemspec`.
 
 ## Testing Process
 

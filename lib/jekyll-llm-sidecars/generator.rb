@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   class << self
     attr_accessor :current_destinations
   end
@@ -34,11 +34,11 @@ module JekyllLlmsTxt
       hrefs = sidecar_rows.to_h { |row| [row.entries.first.item, absolute(site, row.path)] }
 
       files = rows.map { |row| [row.path, render_row(row, site, sidecar_paths)] }
-      JekyllLlmsTxt.current_destinations = files.map do |path, _content|
+      JekyllLlmSidecars.current_destinations = files.map do |path, _content|
         Jekyll.sanitized_path(site.dest, path)
       end
       site.instance_variable_set(
-        :@llms_txt,
+        :@llm_sidecars,
         BuildState.new(hrefs: hrefs, files: files)
       )
     end

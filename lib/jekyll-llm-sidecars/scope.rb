@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # A group of census entries that share an output path prefix.
   class Scope
     # @param path_prefix [String]

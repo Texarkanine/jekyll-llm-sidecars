@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # Selects documents and registers one Entry for each of them.
   class Census
     # @param site [Jekyll::Site]

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # Builds the index name and notes from fields Jekyll already stored.
   class Summary
     Line = Data.define(:name, :notes)

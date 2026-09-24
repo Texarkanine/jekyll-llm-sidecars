@@ -19,7 +19,7 @@ Jekyll::Hooks.register(:site, :post_read) do |site|
   site.config.delete("baseurl") if site.config["delete_baseurl"]
 end
 
-RSpec.describe JekyllLlmsTxt::Generator do
+RSpec.describe JekyllLlmSidecars::Generator do
   let(:layout) { "<!DOCTYPE html><html><head><title>x</title></head><body>{{ content }}</body></html>\n" }
   let(:config) do
     {
@@ -29,7 +29,7 @@ RSpec.describe JekyllLlmsTxt::Generator do
       "baseurl" => "/blog",
       "permalink" => "/:year/:month/:day/:title:output_ext",
       "collections" => { "garden" => { "output" => true } },
-      "llms_txt" => {
+      "llm_sidecars" => {
         "create_llms_full" => true,
         "include_categories" => true,
         "include_collections" => true,
@@ -189,7 +189,7 @@ RSpec.describe JekyllLlmsTxt::Generator do
           "b.md" => "---\ntitle: B\n---\nB\n"
         },
         "url" => "https://example.com",
-        "llms_txt" => { "create_llms_full" => true }
+        "llm_sidecars" => { "create_llms_full" => true }
       )
 
       expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
@@ -202,7 +202,7 @@ RSpec.describe JekyllLlmsTxt::Generator do
           "b.md" => "---\ntitle: B\n---\nB"
         },
         "url" => "https://example.com",
-        "llms_txt" => { "create_llms_full" => true }
+        "llm_sidecars" => { "create_llms_full" => true }
       )
 
       expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
@@ -215,20 +215,20 @@ RSpec.describe JekyllLlmsTxt::Generator do
           "_posts/2020-01-04-beta.md" => "---\ntitle: Beta\ncategories: [essay]\n---\nB\n\n"
         },
         "url" => "https://example.com",
-        "llms_txt" => { "create_llms_full" => true, "include_categories" => true }
+        "llm_sidecars" => { "create_llms_full" => true, "include_categories" => true }
       )
 
       expect(read_dest(site, "/category/essay/llms-full.txt")).to eq("# Beta\n\nB\n\n# Alpha\n\nA")
     end
 
     it "runs the body computer once per Markdown document" do
-      allow(JekyllLlmsTxt::Body).to receive(:call).and_call_original
+      allow(JekyllLlmSidecars::Body).to receive(:call).and_call_original
 
       process_site(files, config)
 
       markdown_docs = files.keys.count { |path| path.end_with?(".md") && !path.start_with?("_layouts") }
 
-      expect(JekyllLlmsTxt::Body).to have_received(:call).exactly(markdown_docs).times
+      expect(JekyllLlmSidecars::Body).to have_received(:call).exactly(markdown_docs).times
     end
 
     it "keeps an HTML page on its own URL when that page sorts first" do
@@ -322,7 +322,7 @@ RSpec.describe JekyllLlmsTxt::Generator do
           "zeta" => { "output" => true },
           "alpha" => { "output" => true }
         },
-        "llms_txt" => { "include_collections" => true, "include_paths" => %w[alpha zeta] },
+        "llm_sidecars" => { "include_collections" => true, "include_paths" => %w[alpha zeta] },
         "title" => "T"
       )
       text = read_dest(site, "/llms.txt")

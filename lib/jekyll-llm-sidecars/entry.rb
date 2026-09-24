@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # One document. Summary and body are slots filled on first read.
   class Entry
     UNSET = Object.new

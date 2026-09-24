@@ -86,6 +86,8 @@ No new technology - validation not required.
 - [x] Implementation plan complete
 - [x] Technology validation complete
 - [x] Pre-Mortem complete
-- [ ] Preflight
-- [ ] Build
+- [x] Preflight
+- [x] Build
+    - [x] Step 1: rename gem, module, and config key (specs red, then green)
+    - [x] Step 2: documentation and memory bank
 - [ ] QA

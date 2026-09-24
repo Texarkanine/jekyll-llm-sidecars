@@ -15,7 +15,7 @@ end
 
 require "tmpdir"
 require "jekyll"
-require "jekyll-llms-txt"
+require "jekyll-llm-sidecars"
 
 Dir[File.expand_path("support/**/*.rb", __dir__)].each { |file| require file }
 

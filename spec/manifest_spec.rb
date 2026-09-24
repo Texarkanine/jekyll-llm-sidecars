@@ -2,12 +2,12 @@
 
 require "spec_helper"
 
-RSpec.describe JekyllLlmsTxt::Manifest do
+RSpec.describe JekyllLlmSidecars::Manifest do
   def rows_for(files, config = {})
     site = build_site(files, config)
-    configuration = JekyllLlmsTxt::Configuration.new(site)
-    entries = JekyllLlmsTxt::Census.call(site, configuration)
-    scopes = JekyllLlmsTxt::ScopeBuilder.call(site, configuration, entries)
+    configuration = JekyllLlmSidecars::Configuration.new(site)
+    entries = JekyllLlmSidecars::Census.call(site, configuration)
+    scopes = JekyllLlmSidecars::ScopeBuilder.call(site, configuration, entries)
     [described_class.build(configuration, scopes, entries), entries]
   end
 
@@ -24,9 +24,9 @@ RSpec.describe JekyllLlmsTxt::Manifest do
 
     it "raises when markdown_ext is missing" do
       site = build_site("about.md" => page_body(title: "About"))
-      configuration = JekyllLlmsTxt::Configuration.new(site)
-      entries = JekyllLlmsTxt::Census.call(site, configuration)
-      scopes = JekyllLlmsTxt::ScopeBuilder.call(site, configuration, entries)
+      configuration = JekyllLlmSidecars::Configuration.new(site)
+      entries = JekyllLlmSidecars::Census.call(site, configuration)
+      scopes = JekyllLlmSidecars::ScopeBuilder.call(site, configuration, entries)
       site.config.delete("markdown_ext")
 
       expect { described_class.build(configuration, scopes, entries) }.to raise_error(KeyError)
@@ -42,7 +42,7 @@ RSpec.describe JekyllLlmsTxt::Manifest do
     end
 
     it "writes an index row per scope and no corpus row by default" do
-      rows, = rows_for(files, "llms_txt" => { "include_categories" => true })
+      rows, = rows_for(files, "llm_sidecars" => { "include_categories" => true })
       paths = rows.select { |row| row.kind == :index }.map(&:path)
 
       expect(paths).to include("/llms.txt", "/category/record/llms.txt")
@@ -53,7 +53,7 @@ RSpec.describe JekyllLlmsTxt::Manifest do
     it "omits index rows when llms_txt is false" do
       rows, = rows_for(
         files,
-        "llms_txt" => {
+        "llm_sidecars" => {
           "create_llms_txt" => false,
           "create_llms_full" => true,
           "include_categories" => true
@@ -71,7 +71,7 @@ RSpec.describe JekyllLlmsTxt::Manifest do
     it "puts the same Entry on each index and corpus that lists it" do
       rows, entries = rows_for(
         files,
-        "llms_txt" => { "create_llms_full" => true, "include_categories" => true }
+        "llm_sidecars" => { "create_llms_full" => true, "include_categories" => true }
       )
       hello = entries.find { |entry| entry.item.data["title"] == "Hello" }
       listed = rows.select { |row| %i[index corpus].include?(row.kind) && row.entries.include?(hello) }
@@ -86,7 +86,7 @@ RSpec.describe JekyllLlmsTxt::Manifest do
     end
 
     it "keeps HTML entries on indexes and off corpus and sidecar rows" do
-      rows, entries = rows_for(files, "llms_txt" => { "create_llms_full" => true })
+      rows, entries = rows_for(files, "llm_sidecars" => { "create_llms_full" => true })
       html = entries.find { |entry| entry.item.relative_path == "page.html" }
       index = rows.find { |row| row.path == "/llms.txt" }
       corpus = rows.find { |row| row.path == "/llms-full.txt" }
@@ -107,7 +107,7 @@ RSpec.describe JekyllLlmsTxt::Manifest do
     end
 
     it "adds no sidecar rows when markdown is false" do
-      rows, = rows_for(files, "llms_txt" => { "create_markdown" => false, "create_llms_full" => true })
+      rows, = rows_for(files, "llm_sidecars" => { "create_markdown" => false, "create_llms_full" => true })
 
       expect(rows.none? { |row| row.kind == :sidecar }).to be true
       corpus = rows.find { |row| row.path == "/llms-full.txt" }
@@ -117,8 +117,8 @@ RSpec.describe JekyllLlmsTxt::Manifest do
 
     it "fails when two scopes claim one path" do
       site = build_site("about.md" => page_body(title: "About"))
-      configuration = JekyllLlmsTxt::Configuration.new(site)
-      scope = JekyllLlmsTxt::Scope.new(path_prefix: "/", title: "", description: nil, entries: [])
+      configuration = JekyllLlmSidecars::Configuration.new(site)
+      scope = JekyllLlmSidecars::Scope.new(path_prefix: "/", title: "", description: nil, entries: [])
 
       expect { described_class.build(configuration, [scope, scope], []) }
         .to raise_error(described_class::Collision, "duplicate output path /llms.txt")

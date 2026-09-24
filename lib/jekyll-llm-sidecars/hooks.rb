@@ -2,13 +2,13 @@
 
 require "fileutils"
 
-module JekyllLlmsTxt
+module JekyllLlmSidecars
   # Writes this plugin's destination files and inserts Markdown alternate links.
   module Hooks
     # @param site [Jekyll::Site]
     # @return [void]
     def self.inject(site)
-      state = site.instance_variable_get(:@llms_txt)
+      state = site.instance_variable_get(:@llm_sidecars)
       return unless state
 
       documents(site).each do |document|
@@ -24,7 +24,7 @@ module JekyllLlmsTxt
     # @param obsolete [Array<String>] absolute destination paths the cleaner will delete
     # @return [void]
     def self.keep_destinations(obsolete)
-      kept = JekyllLlmsTxt.current_destinations
+      kept = JekyllLlmSidecars.current_destinations
       return if kept.nil?
 
       obsolete.delete_if { |path| kept.include?(path) }
@@ -33,7 +33,7 @@ module JekyllLlmsTxt
     # @param site [Jekyll::Site]
     # @return [void]
     def self.write(site)
-      state = site.instance_variable_get(:@llms_txt)
+      state = site.instance_variable_get(:@llm_sidecars)
       return unless state
 
       state.files.each do |path, content|
@@ -51,13 +51,13 @@ module JekyllLlmsTxt
 end
 
 Jekyll::Hooks.register(:site, :post_render) do |site|
-  JekyllLlmsTxt::Hooks.inject(site)
+  JekyllLlmSidecars::Hooks.inject(site)
 end
 
 Jekyll::Hooks.register(:clean, :on_obsolete) do |obsolete|
-  JekyllLlmsTxt::Hooks.keep_destinations(obsolete)
+  JekyllLlmSidecars::Hooks.keep_destinations(obsolete)
 end
 
 Jekyll::Hooks.register(:site, :post_write) do |site|
-  JekyllLlmsTxt::Hooks.write(site)
+  JekyllLlmSidecars::Hooks.write(site)
 end

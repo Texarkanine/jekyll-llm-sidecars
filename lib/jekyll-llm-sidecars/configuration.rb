@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module JekyllLlmsTxt
-  # Reads the `llms_txt` config block. A missing block uses the README defaults.
+module JekyllLlmSidecars
+  # Reads the `llm_sidecars` config block. A missing block uses the README defaults.
   # A key that is present wins, including an explicit false or an empty list.
   class Configuration
     DEFAULT_INCLUDE = %w[pages posts].freeze
@@ -9,7 +9,7 @@ module JekyllLlmsTxt
 
     # @param site [Jekyll::Site]
     def initialize(site)
-      block = site.config["llms_txt"]
+      block = site.config["llm_sidecars"]
       @block = block.is_a?(Hash) ? block : {}
     end
 
