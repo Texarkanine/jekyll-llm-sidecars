@@ -45,3 +45,14 @@ Warn and skip when a sidecar destination already exists. Write this plugin's fil
     - FAIL. Build must rerun. `File.exist?` is the wrong predicate
 * Insights
     - `keep_destinations` removes plugin paths from Jekyll's obsolete list, so every sidecar still exists when `:site, :post_write` runs. Existence cannot tell a permalink collision from a file this plugin wrote on the last build
+
+## 2026-09-24 - QA - COMPLETE (PASS)
+
+* Work completed
+    - Reviewed `Hooks.write` against the brief after the occupancy rework
+    - Confirmed sidecar skip uses `each_site_file` destinations, binary writes, and unchanged census matching
+* Decisions made
+    - PASS. Advisories do not block
+* Insights
+    - `Page#destination` and `Jekyll.sanitized_path` meet for a `.md` permalink because Jekyll takes `output_ext` from the permalink
+    - Alternate links still come from generate-time hrefs, so a skipped sidecar can still get a markdown alternate tag
