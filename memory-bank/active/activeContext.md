@@ -1,11 +1,13 @@
 # Active Context
 
 ## Current Task: Exclude globs and corpus headings
-**Phase:** COMPLEXITY-ANALYSIS - COMPLETE
+**Phase:** PLAN - COMPLETE
 
 ## What Was Done
-- Confirmed intent: `**` exclude globs match directory indexes, and tag and category corpora gain an H1 and per-document H2s
-- Classified the task as Level 2: two output fixes in this plugin, with the heading shape already shown by the live files
+- Wrote the Level 2 plan for `exclude-globs-corpus-headings`
+- Each non-root corpus document gets an H1 of `entry.summary.name`. The root corpus stays body-only
+- Documents are separated by exactly two newlines
+- Exclude matching will pass `File::FNM_EXTGLOB | File::FNM_PATHNAME`
 
 ## Next Step
-- Load the Level 2 workflow and run the plan phase
+- Preflight validation

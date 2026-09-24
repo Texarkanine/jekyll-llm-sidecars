@@ -14,3 +14,15 @@ Make `**` exclude globs match the directory trees the configuration names, and p
 * Insights
     - `File.fnmatch?` without `FNM_EXTGLOB` does not treat `**` as a directory tree
     - `Generator#render_row` joins corpus bodies with no headings
+
+## 2026-09-24 - PLAN - COMPLETE
+
+* Work completed
+    - Wrote the implementation plan in `memory-bank/active/tasks.md`
+* Decisions made
+    - Document titles are H1s on every non-root corpus, including collection corpora
+    - The root corpus stays body-only and uses the same two-newline join
+    - Match `**` with `File::FNM_EXTGLOB | File::FNM_PATHNAME`
+* Insights
+    - The live `# scope` / `## page title` shape demotes headings that already start at H2 inside the body
+

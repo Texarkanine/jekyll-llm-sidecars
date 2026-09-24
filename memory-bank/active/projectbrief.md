@@ -12,13 +12,14 @@ A glob such as `/tags/**/*` or `/error/**/*` excludes that directory, its index,
 
 ### Headings on tag and category corpora
 
-A tag or category `llms-full.txt` opens with an H1 of the scope name, then an H2 of each document title before that document's body.
+Each document in a tag or category `llms-full.txt` keeps its own title as an H1. There is no scope H1, and a document title is not demoted to an H2.
 
 ## Requirements
 
 1. `/**` in an exclude glob matches the directory itself, its index, and nested paths.
-2. Tag and category `llms-full.txt` files include the scope H1 and a per-document H2.
-3. The root `llms-full.txt` stays the joined sidecar bodies, with no added heading.
+2. Each document in a tag or category `llms-full.txt` is introduced by an H1 of that document's title.
+3. Documents in every `llms-full.txt` are separated by exactly two newlines.
+4. The root `llms-full.txt` stays the joined sidecar bodies, with no added heading.
 
 ## Constraints
 
@@ -28,5 +29,5 @@ A tag or category `llms-full.txt` opens with an H1 of the scope name, then an H2
 ## Acceptance Criteria
 
 1. `/tags/`, `/tags/index.html`, `/tags/bitcoin/`, and `/error/404.html` match the globs the blog uses.
-2. A category or custom-scope corpus starts with `# {scope title}` and `## {document title}` before each body.
-3. Existing root corpus join tests still pass.
+2. A category or custom-scope corpus uses `# {document title}` for each document, with that document's existing headings left as they are.
+3. Adjacent documents are separated by exactly two newlines, including in the root corpus.
