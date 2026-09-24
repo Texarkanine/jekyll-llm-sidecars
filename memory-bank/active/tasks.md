@@ -82,4 +82,4 @@ No new technology - validation not required.
 - [x] Pre-Mortem complete
 - [x] Preflight
 - [x] Build
-- [ ] QA
+- [x] QA — PASS (3 non-blocking advisories: PATHNAME-only flag spelling, unpinned `/tags/` + `/tags/bitcoin/` + `/garden/tags/` glob variants, `Scope#root?` predicate; see `.qa-validation-status`)

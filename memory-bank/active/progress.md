@@ -71,3 +71,23 @@ Make `**` exclude globs match the directory trees the configuration names, and p
 * Insights
     - No existing test asserts category or collection `llms-full.txt` text, so unit 3's new heading test adds coverage without colliding with an existing example
 
+## 2026-09-24 - QA - COMPLETE (PASS)
+
+* Work completed
+    - Reviewed the build commit against the implementation plan and project brief; re-ran `bundle exec rspec` (132 examples, 0 failures, 100% line coverage) and `bundle exec rubocop` (no offenses)
+    - Wrote `memory-bank/active/.qa-validation-status` with findings and three non-blocking advisories
+* Decisions made
+    - PASS: implementation acceptable as-is; advisories (PATHNAME-only flag spelling vs plan, unpinned glob variants, `Scope#root?` predicate) do not block acceptance
+* Insights
+    - `File::FNM_PATHNAME` alone agrees with `FNM_EXTGLOB | FNM_PATHNAME` on every brief-relevant glob/path pair, so the flag-spelling deviation is behaviorally inert
+
+## 2026-09-24 - REFLECT - COMPLETE
+
+* Work completed
+    - Wrote `memory-bank/active/reflection/reflection-exclude-globs-corpus-headings.md`
+* Decisions made
+    - systemPatterns and techContext stay as they are: the glob rule is now in the README and product context
+* Insights
+    - A one-newline chomp looks correct until a body ends in two newlines
+
+
