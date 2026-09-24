@@ -26,3 +26,27 @@ Fix every finding in `.slobac/2026-09-23T19-16-57/audit.md` using that report's 
     - Assert highlight class and text with string checks instead of Nokogiri
 * Insights
     - Strengthened oracles should already be green if the product matches the audit; a red run means the oracle is wrong
+
+## 2026-09-23 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Validated the Level 2 plan against the audit, the specs, Body/Hooks/scope_builders, and Jekyll 4.4.1 / Liquid 4.0.4
+    - Wrote `memory-bank/active/.preflight-status`; first line is `FAIL (fixable)`
+* Decisions made
+    - Fail the gate: unit 3's path-in-message oracle and unit 6's `puts :hi` substring cannot pass with no lib/ change
+    - Do not edit the plan; known fixes are `stats_table` includes `page.path`, and strip-tags for highlight text
+* Insights
+    - Jekyll logs `format_error(e, path)` then re-raises the Liquid error; `template_name` stays nil
+    - `stats_table` already lists `marked.md` on the error path without `profile: true`
+    - Highlight HTML splits `puts` and `:hi` across Rouge spans
+
+## 2026-09-23 - PLAN - COMPLETE
+
+* Work completed
+    - Revised units 1, 3, and 6 in `memory-bank/active/tasks.md` from the preflight findings
+* Decisions made
+    - Attribute Liquid renders through `stats_table`, not the exception message
+    - Assert highlight text only after stripping tags
+    - Write the scope-builder `around` hook with `do`/`end`
+* Insights
+    - The brace form of `around` with `ensure` is a SyntaxError on this Ruby

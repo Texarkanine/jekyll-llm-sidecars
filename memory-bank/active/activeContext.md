@@ -4,9 +4,10 @@
 **Phase:** PLAN - COMPLETE
 
 ## What Was Done
-- Wrote the Level 2 plan for task `slobac-test-smells` in `memory-bank/active/tasks.md`
-- Kept every change in `spec/`; no `lib/` change and no new dependency
-- Chose a Liquid error's path over `@stats`, an `around` restore for `scope_builders`, and string checks for highlight class and text instead of Nokogiri
+- Re-planned after preflight `FAIL (fixable)`
+- Unit 3 now asserts `site.liquid_renderer.stats_table` includes `page.path`, and no longer expects the path on `Liquid::UndefinedVariable#message`
+- Unit 6 now strips tags before expecting `puts :hi`
+- Unit 1 uses `around do ... ensure ... end`
 
 ## Next Step
 - Preflight validation

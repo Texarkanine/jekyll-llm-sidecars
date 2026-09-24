@@ -11,11 +11,11 @@ Rewrite the examples named in `.slobac/2026-09-23T19-16-57/audit.md` so each rem
 ### Behaviors to Verify
 
 - A full build writes sidecars and joins corpus bodies without reading `LiquidRenderer` `@stats`.
-- Liquid errors from `Body.call` name the document source path (`item.path`), which is the public stand-in for the removed `@stats` assertion.
+- After `Body.call`, `site.liquid_renderer.stats_table` includes that page's `path`. That is the public stand-in for the removed `@stats` assertion. `profile: true` is not required.
 - `Body.call` count equals the Markdown documents in the `files` fixture, derived in the example.
 - Unknown filter, lax or with `strict_filters` absent: `Body.call` returns `"x\n"`.
 - Unknown variable, `strict_variables: false` or key absent: `Body.call` returns `"\n"`.
-- A highlight tag is rendered: the raw `{% highlight` tag is gone, and the sidecar has a highlight element in `language-ruby` whose text contains `puts :hi`. No `>puts</span>` pin.
+- A highlight tag is rendered: the raw `{% highlight` tag is gone, the sidecar includes `class="highlight"` and `language-ruby`, and the sidecar with tags stripped contains `puts :hi`. No `>puts</span>` pin.
 - With no stored build, `Hooks.inject` leaves a document's existing HTML output unchanged.
 - A nil document output reached through `process_site` does not stop `Hooks.inject` from linking a later page.
 - `scope_builders` is restored after every example, including on failure.
@@ -34,7 +34,7 @@ Rewrite the examples named in `.slobac/2026-09-23T19-16-57/audit.md` so each rem
 
 - Files: `spec/scope_spec.rb`
 
-1. Stub tests: replace the file `before` clear with an `around` example that saves `Jekyll::LlmsTxt.scope_builders`, clears, runs, and `replace`s the saved list in `ensure`.
+1. Stub tests: replace the file `before` clear with an `around` hook that saves `Jekyll::LlmsTxt.scope_builders`, clears, runs, and `replace`s the saved list in `ensure`. Use `around do ... ensure ... end`. The brace form `around { ... ensure ... }` is a SyntaxError on this Ruby.
 2. Stub interface: none. `Jekyll::LlmsTxt.scope_builders` already exists.
 3. Write tests and run red: the around hook is the fix; there is no separate assertion. Run `bundle exec rspec spec/scope_spec.rb`.
 4. Write code and run green: no `lib/` change. Run `bundle exec rspec --order random --seed 1`, seed 2, and seed 3.
@@ -48,14 +48,14 @@ Rewrite the examples named in `.slobac/2026-09-23T19-16-57/audit.md` so each rem
 3. Write tests and run red: copy each example's fixture and call. For the four "renders" examples, assert `eq("x\n")` or `eq("\n")` as the audit states, instead of `not_to raise_error`. Leave the four raise examples' assertions as they are. Run `bundle exec rspec spec/body_spec.rb` and expect green, because the product already renders those strings. If one is red, stop: the oracle is wrong.
 4. Write code and run green: delete those eight examples from `spec/generator_spec.rb`. No `lib/` change. Run `bundle exec rspec spec/body_spec.rb spec/generator_spec.rb`.
 
-### 3. Attribute Liquid renders by error path — executable
+### 3. Attribute Liquid renders through stats_table — executable
 
 - Files: `spec/body_spec.rb`, `spec/generator_spec.rb`
 
-1. Stub tests: add an empty example in `spec/body_spec.rb`, "names the document path when Liquid raises".
-2. Stub interface: none.
-3. Write tests and run red: build a page whose body is `{{ nosuch }}` with `strict_variables: true`, call `Body.call`, and expect `Liquid::UndefinedVariable` whose message includes the page's source path. Remove `instance_variable_get(:@stats)` from "writes sidecars and joins corpus bodies with one newline". Run `bundle exec rspec spec/body_spec.rb`.
-4. Write code and run green: no `lib/` change. `Body.render_liquid` already passes `item.path`.
+1. Stub tests: add an empty example in `spec/body_spec.rb`, "records the document path on the liquid renderer".
+2. Stub interface: none. `Jekyll::LiquidRenderer#stats_table` is already public.
+3. Write tests and run red: `build_site` a Markdown page, call `Jekyll::LlmsTxt::Body.call(page)`, and expect `site.liquid_renderer.stats_table` to include `page.path`. Do not set `profile: true`. Do not read `@stats`. Remove `instance_variable_get(:@stats)` from "writes sidecars and joins corpus bodies with one newline". Run `bundle exec rspec spec/body_spec.rb`.
+4. Write code and run green: no `lib/` change. `Body.render_liquid` already passes `item.path`, and `file(path)` records that name.
 
 ### 4. Derive the body-computer count — executable
 
@@ -81,7 +81,7 @@ Rewrite the examples named in `.slobac/2026-09-23T19-16-57/audit.md` so each rem
 
 1. Stub tests: none new. Edit "renders a highlight tag into the sidecar".
 2. Stub interface: none. Do not add Nokogiri; it is not a project dependency, and the audit names it only as one parser.
-3. Write tests and run red: assert the sidecar does not include `{% highlight`, and that it includes `class="highlight"`, `language-ruby`, and `puts :hi`. Drop `>puts</span>` and `>:hi</span>`.
+3. Write tests and run red: assert the sidecar does not include `{% highlight`, and that it includes `class="highlight"` and `language-ruby`. Strip tags from the sidecar and assert that text includes `puts :hi`. Drop `>puts</span>` and `>:hi</span>`. The contiguous substring `puts :hi` is absent because Rouge splits those tokens.
 4. Write code and run green: no `lib/` change. Run that example.
 
 ### 7. Reach a nil output through the public build — executable
@@ -114,16 +114,16 @@ No new technology - validation not required. Nokogiri is not added.
 
 ## Challenges & Mitigations
 
-- The path-in-error example may not kill the `item.path` mutant if Liquid's message omits the filename: then assert through `site.liquid_renderer.stats_table` with `profile: true`, which the audit names as the other public surface. Do not put `instance_variable_get` back.
+- `stats_table` may omit the path unless rendering actually calls `file(path)`: the preflight run already saw `marked.md` recorded without `profile: true`. If a later Jekyll stops recording on the success path, call `Body.call` on a strict-variable error and read `stats_table` again. Do not put `instance_variable_get` back.
 - Derived Markdown count may not equal 7 if a fixture path is Markdown but not a document: compare the derived number to 7 once, and adjust the predicate only if a named file is wrongly included or excluded. Do not hard-code 7 again.
 - Deleting an example may drop a mutant kill: the end-of-build mutant run is the gate. Restore the unique assertion onto the kept example; do not restore the smell.
 - `config.order = :random` is not set in the suite. The gate is three explicit shuffled seeds, so a permanent order change is not required.
-- Highlight markup may not contain the substring `puts :hi` if Rouge splits the token: assert the element's text by stripping tags, still without pinning `</span>`.
+- Strip-tags may still fail if Rouge inserts text between `puts` and `:hi`: assert the two tokens are present in order in the stripped text, still without pinning `</span>`.
 
 ## Pre-Mortem
 
 - The plan treats a green strengthened example as proof and never checks mutants until the end, so a deleted example's unique kill is found late: the mutant run stays the last build step, and a kill loss sends that one example back, not the whole suite.
-- Parsing highlight HTML with string `include` still couples to Rouge class names: accepted, because those two class names are the semantic layer the audit asks for, and the span-boundary pins are what get removed.
+- Parsing highlight HTML with string `include` still couples to Rouge class names: accepted, because those two class names are the semantic layer the audit asks for, and the span-boundary pins are what get removed. The stripped-text check is in unit 6, not only in Challenges.
 
 ## Status
 
