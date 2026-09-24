@@ -174,9 +174,12 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
         ].join("\n")
       )
       expect(read_dest(site, "/liquid.md")).to eq("Hello Liquid\n")
-      expect(site.liquid_renderer.instance_variable_get(:@stats).keys).to all(be_a(String))
       expect(read_dest(site, "/frozen.md")).to eq("Hello {{ page.title }}\n")
       expect(read_dest(site, "/my-page.md")).to eq("Page body.\n")
+      head = read_dest(site, "/my-page.html")[%r{<head>.*?</head>}m]
+      expect(head).to include(
+        '<link rel="alternate" type="text/markdown" href="https://example.com/blog/my-page.md">'
+      )
     end
 
     it "leaves a blank line between sidecar bodies that already end in a newline" do
@@ -210,7 +213,9 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
 
       process_site(files, config)
 
-      expect(Jekyll::LlmsTxt::Body).to have_received(:call).exactly(7).times
+      markdown_docs = files.keys.count { |path| path.end_with?(".md") && !path.start_with?("_layouts") }
+
+      expect(Jekyll::LlmsTxt::Body).to have_received(:call).exactly(markdown_docs).times
     end
 
     it "keeps an HTML page on its own URL when that page sorts first" do
@@ -252,93 +257,6 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
       )
 
       expect(read_dest(site, "/llms.txt")).to include("](https://example.com/a.md)")
-    end
-
-    it "puts the sidecar alternate link in the rendered head" do
-      site = process_site(
-        {
-          "_layouts/default.html" => "<html><head></head><body>{{ content }}</body></html>",
-          "my-page.md" => "---\nlayout: default\n---\nPage body.\n"
-        },
-        "url" => "https://example.com",
-        "baseurl" => "/blog"
-      )
-
-      expect(read_dest(site, "/my-page.html")).to include(
-        '<link rel="alternate" type="text/markdown" href="https://example.com/blog/my-page.md">'
-      )
-    end
-
-    it "raises when strict_variables is on and a variable is missing" do
-      site = build_site(
-        { "marked.md" => "---\ntitle: T\n---\n{{ nosuch }}\n" },
-        "liquid" => { "strict_variables" => true }
-      )
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.to raise_error(Liquid::UndefinedVariable)
-    end
-
-    it "raises when strict_filters is on and a filter is missing" do
-      site = build_site(
-        { "marked.md" => "---\ntitle: T\n---\n{{ 'x' | not_a_filter }}\n" },
-        "liquid" => { "strict_filters" => true }
-      )
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.to raise_error(Liquid::UndefinedFilter)
-    end
-
-    it "renders an unknown filter when strict_filters is off" do
-      site = build_site("marked.md" => "---\ntitle: T\n---\n{{ 'x' | not_a_filter }}\n")
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.not_to raise_error
-    end
-
-    it "renders an unknown filter when the strict_filters key is absent" do
-      site = build_site("marked.md" => "---\ntitle: T\n---\n{{ 'x' | not_a_filter }}\n")
-      site.config["liquid"].delete("strict_filters")
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.not_to raise_error
-    end
-
-    it "renders an unknown variable when strict_variables is false" do
-      site = build_site(
-        { "marked.md" => "---\ntitle: T\n---\n{{ nosuch }}\n" },
-        "liquid" => { "strict_variables" => false }
-      )
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.not_to raise_error
-    end
-
-    it "raises when the liquid config is absent" do
-      site = build_site("marked.md" => "---\ntitle: T\n---\n{{ page.title }}\n")
-      site.config.delete("liquid")
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.to raise_error(NoMethodError)
-    end
-
-    it "raises the liquid error when the page path is false" do
-      site = build_site(
-        { "marked.md" => "---\ntitle: T\n---\n{{ nosuch }}\n" },
-        "liquid" => { "strict_variables" => true }
-      )
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-      page.data["path"] = false
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.to raise_error(Liquid::UndefinedVariable)
-    end
-
-    it "renders an unknown variable when the strict_variables key is absent" do
-      site = build_site("marked.md" => "---\ntitle: T\n---\n{{ nosuch }}\n")
-      site.config["liquid"].delete("strict_variables")
-      page = site.pages.find { |candidate| candidate.name == "marked.md" }
-
-      expect { Jekyll::LlmsTxt::Body.call(page) }.not_to raise_error
     end
 
     it "renders include_relative from the page directory" do
@@ -437,7 +355,9 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
 
       sidecar = read_dest(site, "/marked.md")
 
-      expect(sidecar).to include('class="highlight"', 'class="language-ruby"', ">puts</span>", ">:hi</span>")
+      expect(sidecar).not_to include("{% highlight")
+      expect(sidecar).to include('class="highlight"', 'class="language-ruby"')
+      expect(sidecar.gsub(/<[^>]+>/, "")).to include("puts :hi")
     end
 
     it "renders an include tag into the sidecar" do

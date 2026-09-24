@@ -51,6 +51,21 @@ Fix every finding in `.slobac/2026-09-23T19-16-57/audit.md` using that report's 
 * Insights
     - The brace form of `around` with `ensure` is a SyntaxError on this Ruby
 
+## 2026-09-23 - BUILD - COMPLETE
+
+* Work completed
+    - Rewrote the audited examples in `spec/body_spec.rb`, `spec/generator_spec.rb`, `spec/hooks_spec.rb`, and `spec/scope_spec.rb`
+    - `bundle exec rspec`: 131 examples, 0 failures
+    - `bundle exec rubocop`: 28 files, no offenses
+    - `bundle exec mutant run`: 2505 kills, 0 alive, 0 timeouts
+    - Shuffled seeds 1, 2, and 3 passed after the `scope_builders` restore
+* Decisions made
+    - Kept the nested category example and the cleanup-keep example because mutant only runs the examples under the mutated subject
+    - Folded the alternate-link head check into the sidecar example
+* Insights
+    - A Liquid-free body never reaches `stats_table`, because Jekyll skips Liquid when the body has no tag
+
+
 ## 2026-09-23 - PREFLIGHT - COMPLETE
 
 * Work completed

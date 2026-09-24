@@ -27,21 +27,6 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
       expect(read_dest(site, "/a.html")).not_to include("text/markdown")
     end
 
-    it "does not raise when a document output is nil" do
-      site = build_site({ "about.md" => page_body(title: "About") }, "url" => "https://example.com")
-      page = site.pages.find { |candidate| candidate.name == "about.md" }
-      page.output = nil
-      site.instance_variable_set(
-        :@llms_txt,
-        Jekyll::LlmsTxt::BuildState.new(
-          hrefs: { page => "https://example.com/about.md" },
-          files: []
-        )
-      )
-
-      expect { described_class.inject(site) }.not_to raise_error
-    end
-
     it "links a later page when an earlier page output is nil" do
       site = process_site(
         {
@@ -73,6 +58,7 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
     end
 
     it "keeps llms.txt and deletes a file this plugin did not write" do
+      # Cleanup runs without a later write.
       site = process_site(
         { "a.md" => "---\ntitle: A\n---\nA\n" },
         "url" => "https://example.com"
@@ -110,8 +96,13 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
 
     it "leaves the site alone when no build was stored" do
       site = build_site("about.md" => page_body(title: "About"))
+      page = site.pages.find { |candidate| candidate.name == "about.md" }
+      html = "<html><head></head></html>"
+      page.output = html
 
-      expect { described_class.inject(site) }.not_to raise_error
+      described_class.inject(site)
+
+      expect(page.output).to eq(html)
     end
 
     it "still links a later page when an earlier page has no head" do

@@ -3,7 +3,13 @@
 require "spec_helper"
 
 RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
-  before { Jekyll::LlmsTxt.scope_builders.clear }
+  around do |example|
+    saved = Jekyll::LlmsTxt.scope_builders.dup
+    Jekyll::LlmsTxt.scope_builders.clear
+    example.run
+  ensure
+    Jekyll::LlmsTxt.scope_builders.replace(saved)
+  end
 
   def entries_for(site)
     Jekyll::LlmsTxt::Census.call(site, Jekyll::LlmsTxt::Configuration.new(site))
