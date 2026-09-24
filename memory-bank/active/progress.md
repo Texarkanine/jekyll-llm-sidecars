@@ -23,3 +23,13 @@ Give the require-path examples a child process that can load Jekyll from the par
     - Use `Bundler.with_unbundled_env` so `BUNDLER_SETUP` is unset. A partial env hash passed to `Open3` still inherits it
 * Insights
     - Passing `-I` does not evaluate the gemspec, so `Jekyll::LlmsTxt` stays undefined until the require under test
+
+## 2026-09-24 - QA - COMPLETE (PASS)
+
+* Work completed
+    - Semantic review of `spec/version_spec.rb` against the brief and constraints
+    - Wrote `memory-bank/active/.qa-validation-status` as PASS
+* Decisions made
+    - Accept as-is. The leftover `Dir.mktmpdir` is advisory only
+* Insights
+    - Push remains a wrap-up step, not a QA blocker
