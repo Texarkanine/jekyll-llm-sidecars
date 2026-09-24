@@ -104,3 +104,26 @@ Fix every finding in `.slobac/2026-09-23T19-16-57/audit.md` using that report's 
 * Insights
     - A second `generate` plus `cleanup` deletes `/category/record/llms.txt` even though the first write created it
 
+## 2026-09-23 - REFLECT - COMPLETE
+
+* Work completed
+    - Wrote `memory-bank/active/reflection/reflection-slobac-test-smells.md`
+    - Noted mutant's subject selection in `memory-bank/techContext.md`
+* Decisions made
+    - productContext and systemPatterns need no update: the product and architecture did not change
+* Insights
+    - Delete-and-fold has to land on an example under the mutated subject, or the kill-set shrinks
+
+
+
+## 2026-09-23 - QA - COMPLETE (PASS)
+
+* Work completed
+    - Re-reviewed rework commit `c364972` against all 15 audit findings, the plan, and the brief; wrote `memory-bank/active/.qa-validation-status` (first line `PASS`)
+    - Confirmed no `lib/` change, no ivar access or TODO debris, and the eight Body examples plus stats_table/highlight/nil-output/inject oracles all match the plan
+    - Live gates: `bundle exec rspec` 129 examples 0 failures (default and seed 2), `bundle exec rubocop` on the four spec files clean; build-recorded mutant 2505/0 alive trusted (spec-only folds since that run preserve the kill-set by subject)
+* Decisions made
+    - PASS: findings 13 and 14 remediated - both weaker standalone duplicates deleted, unique assertions folded into kept examples under the subject that kills them, framing comment on the kept cleanup test
+    - The two unplanned `body_spec.rb` examples and the inline fold placements are advisories, not blockers
+* Insights
+    - Mutant's per-subject example selection is what forces the fold direction: a generator-subject kill can only survive inside a generator example, so deleting a duplicate outright is only safe when no such kill exists

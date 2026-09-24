@@ -1,0 +1,22 @@
+PASS
+
+Re-QA after build rework (commit c364972). Prior QA FAIL items (findings 13, 14) are now remediated as prescribed; all 15 audit findings verified against the specs. No lib/ change (empty diff vs initial commit). Verified live: bundle exec rspec 129 examples 0 failures, seed 2 129/0, rubocop 4 files no offenses. Recorded build gates trusted: mutant 2505 kills 0 alive, seeds 1-3 green.
+
+Finding-by-finding:
+- 1 (impl-coupled @stats): @stats read gone from "writes sidecars and joins corpus bodies"; attribution covered by body_spec "records the document path on the liquid renderer" via public stats_table on nested docs/marked.md (path distinct from name, per preflight advisory). Remediated.
+- 2 (mystery-guest count): expected count derived from files fixture predicate. Remediated.
+- 3/12 (naming-lies / alternate-link redundancy): standalone generator alternate-link example deleted; hooks_spec:13 kept with head extraction plus HTML-page negative. The head-placement check folded into the sidecar example preserves the kill under the generator subject. Remediated.
+- 4-7 (vacuous lax renders): body_spec asserts eq("x\n") / eq("\n"); the four raise examples unchanged. Remediated.
+- 8 (presentation-coupled highlight): raw tag gone, class="highlight" + language-ruby includes, tag-stripped text includes "puts :hi", span pins dropped. String checks instead of Nokogiri per plan (no new dependency), preflight-accepted. Remediated with sanctioned deviation.
+- 9 (impl-coupled nil output): instance_variable_set example deleted; "links a later page when an earlier page output is nil" drives state through process_site with positive oracle. Remediated.
+- 10 (vacuous no-build-stored): page output set to real HTML, inject called, output asserted eq original. Remediated.
+- 11 (shared-state scope_builders): around do/ensure hook saves, clears, and replaces; no global after-hook, no order change. Remediated.
+- 13 (cleanup-keep redundancy): generator standalone "keeps llms.txt when cleanup runs without a later write" deleted; hooks kept example carries the framing as a one-line comment plus delete-leftover oracle. The keep assertion folded into generator "writes llms.txt into the destination" preserves the generator-subject kill (mutant selects by executed subject). Remediated.
+- 14 (category-index redundancy): hooks standalone "writes a nested category index" deleted; generator byte-exact "writes the root, category, and collection indexes" kept. The nested read folded into the hooks cleanup example before the second cleanup (which removes the file) preserves the Hooks-subject nested-write guard. Remediated.
+- 15 (deliverable-fossils regroup): eight Body examples under RSpec.describe Body in spec/body_spec.rb; sidecar-through-process_site examples stay in generator_spec; NoMethodError pin unchanged per "leave unflagged/human-look" rule. Remediated.
+
+Dimensions: KISS/DRY/YAGNI clean (no new helpers, no Nokogiri, no speculative code); Completeness full (no TODOs, no stubs; grep confirms no ivar access or debris); Regression clean (naming, structure, error-handling patterns preserved); Integrity clean (no magic numbers, no placeholders); Documentation needs nothing (no behavior change, README contract untouched).
+
+Advisories (non-blocking):
+- body_spec carries two examples outside the plan's move-8-add-1 scope ("returns the source when render_with_liquid is false", "renders include_relative from the page directory"). Both assert real behavior under the correct subject; keep-or-drop is a deliberate maintainer call, ideally before archive.
+- Fold placement for 13/14 keeps subset oracles inline in differently-claimed examples rather than dedicated tests; acceptable under the kill-set gate (mutant 0 alive) and the audit's fold-first instruction, but a future reader may re-ask why the generator write example runs cleanup.

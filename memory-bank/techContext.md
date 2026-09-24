@@ -14,4 +14,4 @@ Bundler, configured by `Gemfile` and `jekyll-llms-txt.gemspec`.
 
 - RSpec: `bundle exec rspec`
 - RuboCop: `bundle exec rubocop`, configured in `.rubocop.yml`
-- Mutant 0.17: `bundle exec mutant run`, configured in `config/mutant.yml`
+- Mutant 0.17: `bundle exec mutant run`, configured in `config/mutant.yml`. Mutant runs the examples that executed the mutated subject. An assertion in another example group does not kill that subject.

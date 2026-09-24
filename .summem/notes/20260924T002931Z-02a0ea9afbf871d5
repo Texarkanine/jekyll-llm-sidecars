@@ -1,0 +1,1 @@
+spec/scope_spec.rb registers into global Jekyll::LlmsTxt.scope_builders and only clears it in before; leaked builders reach generator/hooks/manifest specs under random order.

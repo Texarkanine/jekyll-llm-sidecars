@@ -134,7 +134,13 @@ No new technology - validation not required. Nokogiri is not added.
 - [x] Pre-Mortem complete
 - [x] Preflight
 - [x] Build
-- [ ] QA
+- [x] QA
+
+## QA Results (2026-09-23) - PASS (re-review after rework)
+
+All 15 findings remediated as prescribed. Prior FAIL items fixed: the generator cleanup-keep standalone is deleted (keep assertion folded into "writes llms.txt into the destination" to preserve the generator-subject kill, framing comment on the kept hooks example), and the hooks nested-category standalone is deleted (nested read folded into the hooks cleanup example before the second cleanup, byte-exact generator indexes kept). Live gates: rspec 129/0 (default and seed 2), rubocop clean; recorded mutant 2505/0 alive. Full findings in `memory-bank/active/.qa-validation-status`.
+
+Advisories (non-blocking): two unplanned `spec/body_spec.rb` examples remain (keep-or-drop call); fold placements inline subset oracles in differently-claimed examples.
 
 ## QA Results (2026-09-23) - FAIL
 
