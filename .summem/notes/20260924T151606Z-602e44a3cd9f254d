@@ -1,0 +1,1 @@
+Exclude matching passes only File::FNM_PATHNAME. FNM_EXTGLOB is not required for **/* once PATHNAME is set.
