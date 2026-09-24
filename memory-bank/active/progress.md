@@ -59,3 +59,12 @@ Move the plugin onto the sibling layout: one `lib/jekyll-llms-txt/` directory, o
     - The removed require path is a child-process `LoadError`, and an in-process example checks `defined?(Jekyll::LlmsTxt)` after the normal load
 * Insights
     - A false return from `defines_llms_txt?` would pass on red for the deleted path
+
+## 2026-09-24 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Validated the three-form rewrite against lib/ declarations, hooks.rb, generator.rb, scope_builder.rb, the gemspec, version.rb, and the sibling gem trees
+* Decisions made
+    - First line of `.preflight-status` is `PASS WITH ADVISORY`
+* Insights
+    - The nested pair, qualified `Jekyll::LlmsTxt`, and `LlmsTxt.scope_builders` are the only constant forms in lib; Jekyll::Page / Renderer / Utils are already qualified
