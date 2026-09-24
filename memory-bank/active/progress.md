@@ -41,3 +41,21 @@ Move the plugin onto the sibling layout: one `lib/jekyll-llms-txt/` directory, o
     - `require "jekyll/llms_txt"` stays as an example that expects `LoadError`
 * Insights
     - `bundle exec rspec` loads the gemspec before examples, so a stale `Jekyll::LlmsTxt::VERSION` NameErrors before any example runs
+
+## 2026-09-24 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Re-validated the re-planned move against lib/ declarations, the gemspec, version.rb, and scope_builder.rb
+* Decisions made
+    - First line of `.preflight-status` is `FAIL (fixable)`
+* Insights
+    - No lib file declares `module Jekyll::LlmsTxt`; they all use a nested `module Jekyll` / `module LlmsTxt` pair, so a string replace of `Jekyll::LlmsTxt` never creates `JekyllLlmsTxt`
+
+## 2026-09-24 - PLAN - COMPLETE
+
+* Work completed
+    - Re-planned the green step as a rewrite of the nested module pair, qualified names, and `LlmsTxt.scope_builders`
+* Decisions made
+    - The removed require path is a child-process `LoadError`, and an in-process example checks `defined?(Jekyll::LlmsTxt)` after the normal load
+* Insights
+    - A false return from `defines_llms_txt?` would pass on red for the deleted path

@@ -10,7 +10,8 @@ Move the plugin onto the family layout. One directory, `lib/jekyll-llms-txt/`. O
 
 ### Behaviors to Verify
 
-- `require "jekyll-llms-txt"` in a child process with an empty gem home and the parent load path → `JekyllLlmsTxt` is defined, and it was not defined before the require
+- After the suite loads the gemspec and `require "jekyll-llms-txt"` → `defined?(Jekyll::LlmsTxt)` is nil and `JekyllLlmsTxt::VERSION` is defined
+- `require "jekyll-llms-txt"` in a child process with an empty gem home and the parent load path → `JekyllLlmsTxt` is defined, `Jekyll::LlmsTxt` is not, and it was not defined before the require
 - `require "jekyll/llms_txt"` in that same child → `LoadError`
 - Existing generator, census, manifest, scope, body, hooks, entry, summary, and configuration examples, rewritten to `JekyllLlmsTxt` → the same outcomes as now
 
@@ -29,8 +30,8 @@ Move the plugin onto the family layout. One directory, `lib/jekyll-llms-txt/`. O
 
 1. Stub tests: in `spec/version_spec.rb`, leave `defines_llms_txt?` in place and empty the `"jekyll/llms_txt"` example body. Point the remaining example's description at `JekyllLlmsTxt`.
 2. Stub interface: none. The classes already exist.
-3. Write tests and run red: replace `Jekyll::LlmsTxt` with `JekyllLlmsTxt` in `spec/version_spec.rb` and every other `spec/*_spec.rb`. The `"jekyll-llms-txt"` example also aborts if `defined?(Jekyll::LlmsTxt)`. The `"jekyll/llms_txt"` example expects `LoadError`. Run `bundle exec rspec`. The require example fails because the library still defines `Jekyll::LlmsTxt`.
-4. Write code and run green: move `lib/jekyll/llms_txt/*.rb` to `lib/jekyll-llms-txt/`. Delete `lib/jekyll/llms_txt.rb` and the empty `lib/jekyll/` directory. Replace every `Jekyll::LlmsTxt` in `lib/` and in `jekyll-llms-txt.gemspec` with `JekyllLlmsTxt`, including `spec.version`, `hooks.rb` register call sites, and `generator.rb` `current_destinations`. A module-declaration-only edit leaves those qualified names behind and `bundle exec rspec` NameErrors while loading the gemspec. Point `lib/jekyll-llms-txt.rb` at `require_relative "jekyll-llms-txt/..."`. In `config/mutant.yml`, set the subject to `JekyllLlmsTxt*` and delete the four `module Jekyll` ignore patterns. Run `bundle exec rspec`.
+3. Write tests and run red: replace `Jekyll::LlmsTxt` with `JekyllLlmsTxt` in every `spec/*_spec.rb`. In `spec/version_spec.rb`, add an in-process example that, after the suite's normal load, expects `defined?(Jekyll::LlmsTxt)` to be nil and `JekyllLlmsTxt::VERSION` to be defined. The child `"jekyll-llms-txt"` example aborts if `defined?(Jekyll::LlmsTxt)`. The `"jekyll/llms_txt"` example runs the require in the child and expects that process to raise `LoadError` (assert the exception class, not a false return from `defines_llms_txt?`). Run `bundle exec rspec`. Red is a NameError or a failed nil check, because the library still defines the nested constant.
+4. Write code and run green: move `lib/jekyll/llms_txt/*.rb` to `lib/jekyll-llms-txt/`. Delete `lib/jekyll/llms_txt.rb` and the empty `lib/jekyll/` directory. Rewrite the constant, not the string `Jekyll::LlmsTxt` alone. Every lib file, including `lib/jekyll-llms-txt/version.rb`, opens `module Jekyll` / `module LlmsTxt`. Replace that pair with `module JekyllLlmsTxt`. Also replace every qualified `Jekyll::LlmsTxt` and the inner `LlmsTxt.scope_builders` in `scope_builder.rb` `custom_scopes` with `JekyllLlmsTxt`. Set `jekyll-llms-txt.gemspec` `spec.version` to `JekyllLlmsTxt::VERSION`. Point `lib/jekyll-llms-txt.rb` at `require_relative "jekyll-llms-txt/..."`. In `config/mutant.yml`, set the subject to `JekyllLlmsTxt*` and delete the four `module Jekyll` ignore patterns. Run `bundle exec rspec`.
 
 ### 2. Documented constant — prose/policy
 
@@ -56,7 +57,7 @@ No new technology - validation not required
 
 ## Pre-Mortem
 
-- The move renames files and leaves `module Jekyll` in place, so the suite goes green on the old constant: step 1.3 changes the specs first, so green requires the new constant.
+- Step 1.4 replaces the string `Jekyll::LlmsTxt` and leaves `module Jekyll` / `module LlmsTxt` in place, so the gemspec NameErrors: step 1.4 names that nested pair, `version.rb`, and `LlmsTxt.scope_builders` as the same rewrite.
 - README keeps teaching `Jekyll::LlmsTxt` after the code moves: step 2 updates that sample before the phase ends.
 - Devblog breakage is treated as in-scope and the task stalls on another repo: Challenge 3 keeps that site out of this plan.
 
