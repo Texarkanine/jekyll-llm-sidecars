@@ -36,6 +36,19 @@ Make `**` exclude globs match the directory trees the configuration names, and p
 * Insights
     - `/assets/**` matches a nested path today and stops matching once `FNM_PATHNAME` is set
 
+## 2026-09-24 - BUILD - COMPLETE
+
+* Work completed
+    - Implemented pathname glob matching, the two-newline corpus join, and per-document H1s on non-root corpora
+    - `bundle exec rspec`: 132 examples, 0 failures
+    - `bundle exec rubocop`: no offenses
+    - Mutant on `Census#excluded?` and `Generator#corpus_block`: 82 kills, 0 alive
+* Decisions made
+    - Pass only `File::FNM_PATHNAME`. `FNM_EXTGLOB` is the same bits as or-ing it with `FNM_PATHNAME` when the flags do not overlap, and pathname alone matches the globs
+* Insights
+    - A body that ends in two newlines is what kills a chomp of only one newline
+
+
 
 ## 2026-09-24 - PREFLIGHT - COMPLETE (FAIL (fixable))
 

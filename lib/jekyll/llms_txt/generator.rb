@@ -50,10 +50,21 @@ module Jekyll
         when :index
           index_text(row.scope, site, sidecar_paths)
         when :corpus
-          ordered_entries(row.entries).map(&:body).join("\n")
+          corpus_text(row)
         when :sidecar
           row.entries.first.body
         end
+      end
+
+      def corpus_text(row)
+        ordered_entries(row.entries).map { |entry| corpus_block(entry, row.scope) }.join("\n\n")
+      end
+
+      def corpus_block(entry, scope)
+        body = entry.body.sub(/\n+\z/, "")
+        return body if scope.path_prefix == "/"
+
+        "# #{entry.summary.name}\n\n#{body}"
       end
 
       def index_text(scope, site, sidecar_paths)

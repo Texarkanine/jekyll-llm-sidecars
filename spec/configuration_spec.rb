@@ -107,7 +107,7 @@ RSpec.describe Jekyll::LlmsTxt::Configuration do
   end
 
   describe "#exclude" do
-    let(:default_exclude) { ["/README.md", "/CHANGELOG.md", "/404.html", "/assets/**"] }
+    let(:default_exclude) { ["/README.md", "/CHANGELOG.md", "/404.html", "/assets/**/*"] }
 
     it "defaults to the README sample when llms-txt is absent" do
       expect(configuration.exclude).to eq(default_exclude)

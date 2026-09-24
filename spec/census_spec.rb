@@ -152,6 +152,26 @@ RSpec.describe Jekyll::LlmsTxt::Census do
       expect(relative_paths(census_for(site))).to eq(["keep.md"])
     end
 
+    it "drops a directory index when the glob ends in a double star" do
+      site = build_site(
+        "tags/index.md" => page_body(title: "Tags", extra: "permalink: /tags/index.html"),
+        "keep.md" => page_body(title: "Keep")
+      )
+      site.config["llms-txt"] = { "exclude" => ["/tags/**/*"] }
+
+      expect(relative_paths(census_for(site))).to eq(["keep.md"])
+    end
+
+    it "drops a one-segment path when the glob ends in a double star" do
+      site = build_site(
+        "error/404.md" => page_body(title: "Missing", extra: "permalink: /error/404.html"),
+        "keep.md" => page_body(title: "Keep")
+      )
+      site.config["llms-txt"] = { "exclude" => ["/error/**/*"] }
+
+      expect(relative_paths(census_for(site))).to eq(["keep.md"])
+    end
+
     it "builds one Entry per selected document and uses Summary.line" do
       site = build_site("about.md" => page_body(title: "About"))
       entries = census_for(site)

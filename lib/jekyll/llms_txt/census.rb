@@ -49,7 +49,7 @@ module Jekyll
       def excluded?(item)
         @configuration.exclude.any? do |glob|
           candidate_paths(item).any? do |path|
-            File.fnmatch?(glob, path)
+            File.fnmatch?(glob, path, File::FNM_PATHNAME)
           end
         end
       end

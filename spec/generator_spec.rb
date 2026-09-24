@@ -159,7 +159,7 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
       expect(read_dest(site, "/garden/llms.txt")).to eq(garden_index)
     end
 
-    it "writes sidecars and joins corpus bodies with one newline" do
+    it "writes sidecars and joins corpus bodies with two newlines" do
       site = process_site(files, config)
 
       expect(read_dest(site, "/llms-full.txt")).to eq(
@@ -171,7 +171,7 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
           "Hello Liquid\n",
           "Page body.\n",
           "Garden body.\n"
-        ].join("\n")
+        ].map { |body| body.sub(/\n+\z/, "") }.join("\n\n")
       )
       expect(read_dest(site, "/liquid.md")).to eq("Hello Liquid\n")
       expect(read_dest(site, "/frozen.md")).to eq("Hello {{ page.title }}\n")
@@ -192,10 +192,10 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
         "llms-txt" => { "llms_full" => true }
       )
 
-      expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB\n")
+      expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
     end
 
-    it "joins sidecar bodies that do not end in a newline with one newline" do
+    it "joins sidecar bodies that do not end in a newline with two newlines" do
       site = process_site(
         {
           "a.md" => "---\ntitle: A\n---\nA",
@@ -205,7 +205,20 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
         "llms-txt" => { "llms_full" => true }
       )
 
-      expect(read_dest(site, "/llms-full.txt")).to eq("A\nB")
+      expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
+    end
+
+    it "starts each document in a category corpus with that document's title" do
+      site = process_site(
+        {
+          "_posts/2020-01-03-alpha.md" => "---\ntitle: Alpha\ncategories: [essay]\n---\nA\n",
+          "_posts/2020-01-04-beta.md" => "---\ntitle: Beta\ncategories: [essay]\n---\nB\n\n"
+        },
+        "url" => "https://example.com",
+        "llms-txt" => { "llms_full" => true, "categories" => true }
+      )
+
+      expect(read_dest(site, "/category/essay/llms-full.txt")).to eq("# Beta\n\nB\n\n# Alpha\n\nA")
     end
 
     it "runs the body computer once per Markdown document" do

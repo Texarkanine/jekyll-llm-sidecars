@@ -6,7 +6,7 @@ module Jekyll
     # A key that is present wins, including an explicit false or an empty list.
     class Configuration
       DEFAULT_INCLUDE = %w[pages posts].freeze
-      DEFAULT_EXCLUDE = ["/README.md", "/CHANGELOG.md", "/404.html", "/assets/**"].freeze
+      DEFAULT_EXCLUDE = ["/README.md", "/CHANGELOG.md", "/404.html", "/assets/**/*"].freeze
 
       # @param site [Jekyll::Site]
       def initialize(site)

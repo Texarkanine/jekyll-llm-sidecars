@@ -22,7 +22,7 @@ plugins:
 ## Output
 
 - `/llms.txt`: Markdown index of included entries, in the [llms.txt](https://llmstxt.org/) format. An H1 is the site or scope name. A blockquote is the description when that text is present. H2 headings group the file lists. Each item is `- [name](url)`, with optional `: notes`.
-- `/llms-full.txt`: the sidecar body strings in entry order, joined by exactly one newline. No heading, `Source:` line, horizontal rule, or other wrapper.
+- `/llms-full.txt`: the sidecar body strings in entry order. Trailing newlines on each body are removed, and bodies are joined by exactly two newlines. The root file has no heading. A scope file starts each body with an H1 of that document's title. No `Source:` line or horizontal rule.
 - Per-category and per-collection `llms.txt` / `llms-full.txt` beside those scopes (optional).
 - `*.md` sidecars for included Markdown sources. The source extension is whatever the site lists in `markdown_ext`. Jekyll's default list is `markdown`, `mkdown`, `mkdn`, `mkd`, and `md`. A file URL keeps its directory and swaps the extension for `.md` (`/foo/bar/baz.html` becomes `/foo/bar/baz.md`). A URL that ends in `/` is that directory's index, so the sidecar is `index.md` (`/foo/bar/` becomes `/foo/bar/index.md`).
 - HTML `<link rel="alternate" type="text/markdown" href="...">` inside `<head>`, pointing at sidecars. The position among other head tags is not fixed.
@@ -51,7 +51,7 @@ llms-txt:
     - /README.md
     - /CHANGELOG.md
     - /404.html
-    - /assets/**
+    - /assets/**/*
 ```
 
 - `markdown`: generate sidecars for Markdown sources, link `llms.txt` to those sidecars, and add HTML alternate links. Default: `true`.
@@ -60,7 +60,7 @@ llms-txt:
 - `categories`: include a scope for each non-empty category after include/exclude filtering. Default: `false`.
 - `collections`: include a scope under `/{label}/` for each included writeable collection (not `pages`/`posts`). Default: `false`.
 - `include`: `pages`, `posts`, and output collection names. Default: `[pages, posts]`.
-- `exclude`: URL, Markdown path, or source path globs. Default: `[/README.md, /CHANGELOG.md, /404.html, /assets/**]`.
+- `exclude`: URL, Markdown path, or source path globs. `**` matches a directory, its index, and everything under it. Default: `[/README.md, /CHANGELOG.md, /404.html, /assets/**/*]`.
 
 Per-entry opt-out:
 
