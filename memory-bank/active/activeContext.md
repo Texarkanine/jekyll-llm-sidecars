@@ -1,10 +1,11 @@
 # Active Context
 
 ## Current Task: fix review crashes and missed names
-**Phase:** COMPLEXITY-ANALYSIS - COMPLETE
+**Phase:** PLAN - COMPLETE
 
 ## What Was Done
-- Classified as Level 2. Three crash fixes span scope sort, category scope building, and sidecar paths. The rename is a sweep for names the other thread missed, not an architecture change.
+- Planned three test-first fixes in `Scope#entry_time`, `ScopeBuilder#category_names`, and `Manifest#sidecar_path`, plus one README bullet for `/about` → `/about.md`.
+- A tracked-file search found no leftover gem or module name outside archives and coverage. `create_llms_txt` stays.
 
 ## Next Step
-- Load the Level 2 workflow and run the plan phase.
+- Preflight validation.

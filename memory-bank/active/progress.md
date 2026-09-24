@@ -13,3 +13,14 @@ Fix three review crashes (date sort, nil categories, extensionless sidecar paths
     - Rename work is limited to inaccurate names that the earlier rename thread missed
 * Insights
     - GitHub already serves the repository as `Texarkanine/jekyll-llm-sidecars`
+
+## 2026-09-24 - PLAN - COMPLETE
+
+* Work completed
+    - Wrote the Level 2 plan for the three crash fixes and a leftover-name search
+* Decisions made
+    - Sort converts with `to_time`; categories use `Array`; extensionless URLs append `.md`
+    - README gains one bullet for `/about`
+    - Archives, coverage, `create_llms_txt`, and the checkout directory are not rename targets
+* Insights
+    - Product code is already `JekyllLlmSidecars` under `lib/jekyll-llm-sidecars/`
