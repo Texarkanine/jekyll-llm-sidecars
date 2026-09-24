@@ -23,6 +23,7 @@ module JekyllLlmsTxt
   class Generator < Jekyll::Generator
     # @param site [Jekyll::Site]
     # @return [void]
+    priority :lowest
     def generate(site)
       configuration = Configuration.new(site)
       entries = Census.call(site, configuration)
