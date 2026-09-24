@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Jekyll::LlmsTxt::Body do
+RSpec.describe JekyllLlmsTxt::Body do
   describe ".call" do
     it "raises when strict_variables is on and a variable is missing" do
       site = build_site(

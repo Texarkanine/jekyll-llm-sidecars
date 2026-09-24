@@ -12,14 +12,8 @@ requires:
 
 matcher:
   subjects:
-    - Jekyll::LlmsTxt*
+    - JekyllLlmsTxt*
 
 mutation:
   # A neutral that runs the generator suite can exceed the 5s default.
   timeout: 30.0
-  ignore_patterns:
-    # Inside module Jekyll these names are one constant.
-    - const{name=Utils base=const{name=Jekyll}}
-    - const{name=Page base=const{name=Jekyll}}
-    - const{name=Renderer base=const{name=Jekyll}}
-    - const{name=LlmsTxt base=const{name=Jekyll}}

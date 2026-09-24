@@ -4,7 +4,7 @@ require_relative "lib/jekyll-llms-txt/version"
 
 Gem::Specification.new do |spec|
   spec.name = "jekyll-llms-txt"
-  spec.version = Jekyll::LlmsTxt::VERSION
+  spec.version = JekyllLlmsTxt::VERSION
   spec.authors = ["Texarkanine"]
   spec.email = ["texarkanine@protonmail.com"]
 

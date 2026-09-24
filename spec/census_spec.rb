@@ -21,14 +21,14 @@ Jekyll::Hooks.register(:site, :post_read) do |site|
   end
 end
 
-RSpec.describe Jekyll::LlmsTxt::Census do
+RSpec.describe JekyllLlmsTxt::Census do
   describe ".call" do
     def relative_paths(entries)
       entries.map { |entry| entry.item.relative_path }.sort
     end
 
     def census_for(site)
-      described_class.call(site, Jekyll::LlmsTxt::Configuration.new(site))
+      described_class.call(site, JekyllLlmsTxt::Configuration.new(site))
     end
 
     def deprecation_lines
@@ -177,14 +177,14 @@ RSpec.describe Jekyll::LlmsTxt::Census do
       entries = census_for(site)
 
       expect(entries.size).to eq(1)
-      expect(entries.first.summary).to eq(Jekyll::LlmsTxt::Summary.line(entries.first.item))
+      expect(entries.first.summary).to eq(JekyllLlmsTxt::Summary.line(entries.first.item))
       expect(entries.first.body).to eq(entries.first.item.content)
     end
 
     it "discards an entry registered before the census runs" do
       site = build_site("about.md" => page_body(title: "About"))
       page = site.pages.find { |candidate| candidate.relative_path == "about.md" }
-      stale = Jekyll::LlmsTxt::Entry.new(
+      stale = JekyllLlmsTxt::Entry.new(
         item: page,
         summary_computer: ->(_) { "stale" },
         body_computer: ->(_) { "stale" }

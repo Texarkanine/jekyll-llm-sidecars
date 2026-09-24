@@ -19,7 +19,7 @@ Jekyll::Hooks.register(:site, :post_read) do |site|
   site.config.delete("baseurl") if site.config["delete_baseurl"]
 end
 
-RSpec.describe Jekyll::LlmsTxt::Generator do
+RSpec.describe JekyllLlmsTxt::Generator do
   let(:layout) { "<!DOCTYPE html><html><head><title>x</title></head><body>{{ content }}</body></html>\n" }
   let(:config) do
     {
@@ -222,13 +222,13 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
     end
 
     it "runs the body computer once per Markdown document" do
-      allow(Jekyll::LlmsTxt::Body).to receive(:call).and_call_original
+      allow(JekyllLlmsTxt::Body).to receive(:call).and_call_original
 
       process_site(files, config)
 
       markdown_docs = files.keys.count { |path| path.end_with?(".md") && !path.start_with?("_layouts") }
 
-      expect(Jekyll::LlmsTxt::Body).to have_received(:call).exactly(markdown_docs).times
+      expect(JekyllLlmsTxt::Body).to have_received(:call).exactly(markdown_docs).times
     end
 
     it "keeps an HTML page on its own URL when that page sorts first" do

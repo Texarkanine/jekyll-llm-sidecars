@@ -2,12 +2,12 @@
 
 require "spec_helper"
 
-RSpec.describe Jekyll::LlmsTxt::Manifest do
+RSpec.describe JekyllLlmsTxt::Manifest do
   def rows_for(files, config = {})
     site = build_site(files, config)
-    configuration = Jekyll::LlmsTxt::Configuration.new(site)
-    entries = Jekyll::LlmsTxt::Census.call(site, configuration)
-    scopes = Jekyll::LlmsTxt::ScopeBuilder.call(site, configuration, entries)
+    configuration = JekyllLlmsTxt::Configuration.new(site)
+    entries = JekyllLlmsTxt::Census.call(site, configuration)
+    scopes = JekyllLlmsTxt::ScopeBuilder.call(site, configuration, entries)
     [described_class.build(configuration, scopes, entries), entries]
   end
 
@@ -24,9 +24,9 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
 
     it "raises when markdown_ext is missing" do
       site = build_site("about.md" => page_body(title: "About"))
-      configuration = Jekyll::LlmsTxt::Configuration.new(site)
-      entries = Jekyll::LlmsTxt::Census.call(site, configuration)
-      scopes = Jekyll::LlmsTxt::ScopeBuilder.call(site, configuration, entries)
+      configuration = JekyllLlmsTxt::Configuration.new(site)
+      entries = JekyllLlmsTxt::Census.call(site, configuration)
+      scopes = JekyllLlmsTxt::ScopeBuilder.call(site, configuration, entries)
       site.config.delete("markdown_ext")
 
       expect { described_class.build(configuration, scopes, entries) }.to raise_error(KeyError)
@@ -117,8 +117,8 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
 
     it "fails when two scopes claim one path" do
       site = build_site("about.md" => page_body(title: "About"))
-      configuration = Jekyll::LlmsTxt::Configuration.new(site)
-      scope = Jekyll::LlmsTxt::Scope.new(path_prefix: "/", title: "", description: nil, entries: [])
+      configuration = JekyllLlmsTxt::Configuration.new(site)
+      scope = JekyllLlmsTxt::Scope.new(path_prefix: "/", title: "", description: nil, entries: [])
 
       expect { described_class.build(configuration, [scope, scope], []) }
         .to raise_error(described_class::Collision, "duplicate output path /llms.txt")

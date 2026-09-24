@@ -2,21 +2,21 @@
 
 require "spec_helper"
 
-RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
+RSpec.describe JekyllLlmsTxt::ScopeBuilder do
   around do |example|
-    saved = Jekyll::LlmsTxt.scope_builders.dup
-    Jekyll::LlmsTxt.scope_builders.clear
+    saved = JekyllLlmsTxt.scope_builders.dup
+    JekyllLlmsTxt.scope_builders.clear
     example.run
   ensure
-    Jekyll::LlmsTxt.scope_builders.replace(saved)
+    JekyllLlmsTxt.scope_builders.replace(saved)
   end
 
   def entries_for(site)
-    Jekyll::LlmsTxt::Census.call(site, Jekyll::LlmsTxt::Configuration.new(site))
+    JekyllLlmsTxt::Census.call(site, JekyllLlmsTxt::Configuration.new(site))
   end
 
   def scopes_for(site)
-    described_class.call(site, Jekyll::LlmsTxt::Configuration.new(site), entries_for(site))
+    described_class.call(site, JekyllLlmsTxt::Configuration.new(site), entries_for(site))
   end
 
   def scope_at(scopes, prefix)
@@ -52,9 +52,9 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
 
     def scoped_paths(items)
       entries = items.map do |item|
-        Jekyll::LlmsTxt::Entry.new(item: item, summary_computer: ->(_) {}, body_computer: ->(_) {})
+        JekyllLlmsTxt::Entry.new(item: item, summary_computer: ->(_) {}, body_computer: ->(_) {})
       end
-      Jekyll::LlmsTxt::Scope.new(path_prefix: "/", title: "", description: nil, entries: entries).entries.map do |entry|
+      JekyllLlmsTxt::Scope.new(path_prefix: "/", title: "", description: nil, entries: entries).entries.map do |entry|
         entry.item.relative_path
       end
     end
@@ -216,9 +216,9 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
         "llms_txt" => { "include_categories" => true, "include_collections" => true }
       )
       census = entries_for(site)
-      Jekyll::LlmsTxt.register_scope_builder do |_site, _configuration, entries|
+      JekyllLlmsTxt.register_scope_builder do |_site, _configuration, entries|
         [
-          Jekyll::LlmsTxt::Scope.new(
+          JekyllLlmsTxt::Scope.new(
             path_prefix: "/tags/record/",
             title: "record",
             description: "Tag: record",
@@ -226,7 +226,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
           )
         ]
       end
-      scopes = described_class.call(site, Jekyll::LlmsTxt::Configuration.new(site), census)
+      scopes = described_class.call(site, JekyllLlmsTxt::Configuration.new(site), census)
       hello = census.find { |entry| entry.item.data["title"] == "Hello" }
 
       expect(scope_at(scopes, "/category/record/").entries).to include(hello)
@@ -236,9 +236,9 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
     it "passes the site, configuration, and census array to a registered builder" do
       site = build_site("about.md" => page_body(title: "About"))
       census = entries_for(site)
-      configuration = Jekyll::LlmsTxt::Configuration.new(site)
+      configuration = JekyllLlmsTxt::Configuration.new(site)
       seen = nil
-      Jekyll::LlmsTxt.register_scope_builder do |received_site, received_configuration, received_entries|
+      JekyllLlmsTxt.register_scope_builder do |received_site, received_configuration, received_entries|
         seen = [received_site, received_configuration, received_entries]
         []
       end
@@ -254,8 +254,8 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
       site = build_site("about.md" => page_body(title: "About"))
       census = entries_for(site)
       constructed = nil
-      Jekyll::LlmsTxt.register_scope_builder do |_site, _configuration, entries|
-        constructed = Jekyll::LlmsTxt::Entry.new(
+      JekyllLlmsTxt.register_scope_builder do |_site, _configuration, entries|
+        constructed = JekyllLlmsTxt::Entry.new(
           item: entries.first.item,
           summary_computer: ->(_) { "other" },
           body_computer: ->(_) { "other" }
@@ -263,7 +263,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
         []
       end
 
-      described_class.call(site, Jekyll::LlmsTxt::Configuration.new(site), census)
+      described_class.call(site, JekyllLlmsTxt::Configuration.new(site), census)
 
       expect(constructed).to equal(census.first)
       expect(constructed.summary).to eq(census.first.summary)
@@ -271,8 +271,8 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
 
     it "adds no scope when a registered builder returns an empty scope" do
       site = build_site("about.md" => page_body(title: "About"))
-      Jekyll::LlmsTxt.register_scope_builder do |_site, _configuration, _entries|
-        Jekyll::LlmsTxt::Scope.new(path_prefix: "/empty/", title: "Empty", description: nil, entries: [])
+      JekyllLlmsTxt.register_scope_builder do |_site, _configuration, _entries|
+        JekyllLlmsTxt::Scope.new(path_prefix: "/empty/", title: "Empty", description: nil, entries: [])
       end
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -280,14 +280,14 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
 
     it "adds no scope when a registered builder returns nil" do
       site = build_site("about.md" => page_body(title: "About"))
-      Jekyll::LlmsTxt.register_scope_builder { [nil] }
+      JekyllLlmsTxt.register_scope_builder { [nil] }
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
     end
 
     it "adds no scope when a registered builder returns nothing" do
       site = build_site("about.md" => page_body(title: "About"))
-      Jekyll::LlmsTxt.register_scope_builder { |_site, _configuration, _entries| [] }
+      JekyllLlmsTxt.register_scope_builder { |_site, _configuration, _entries| [] }
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
     end

@@ -80,13 +80,13 @@ For example, if you had "tags" on posts, and URLs like `/tags/foo/` that showed 
 
 ```ruby
 # _plugins/llms_tag_scopes.rb
-Jekyll::LlmsTxt.register_scope_builder do |site, _config, entries|
+JekyllLlmsTxt.register_scope_builder do |site, _config, entries|
   template = site.config.dig("jekyll-archives", "permalinks", "tag") || "/tags/:name/"
   site.tags.filter_map do |name, items|
     scoped = entries.select { |entry| items.include?(entry.item) }
     next if scoped.empty?
 
-    Jekyll::LlmsTxt::Scope.new(
+    JekyllLlmsTxt::Scope.new(
       path_prefix: template.sub(":name", Jekyll::Utils.slugify(name)),
       title: name,
       description: "Tag: #{name}",

@@ -68,3 +68,13 @@ Move the plugin onto the sibling layout: one `lib/jekyll-llms-txt/` directory, o
     - First line of `.preflight-status` is `PASS WITH ADVISORY`
 * Insights
     - The nested pair, qualified `Jekyll::LlmsTxt`, and `LlmsTxt.scope_builders` are the only constant forms in lib; Jekyll::Page / Renderer / Utils are already qualified
+
+## 2026-09-24 - BUILD - COMPLETE
+
+* Work completed
+    - Moved lib onto `lib/jekyll-llms-txt/` and the module `JekyllLlmsTxt`
+    - Suite: 133 examples, 0 failures. RuboCop clean
+* Decisions made
+    - Rewrote each file as a single module with one `end`, matching the preflight advisory
+* Insights
+    - The child `require "jekyll/llms_txt"` now fails with `LoadError`

@@ -50,7 +50,7 @@ If unsure, ask before choosing.
 #### Constraints
 
 - Keep the RSpec suite green (`bundle exec rspec`).
-- An ignore is allowed only when a structure check has shown the variants cannot be told apart. The current ignores are const nodes that name one constant inside `module Jekyll`: `Utils`, `Page`, `Renderer`, and `LlmsTxt`. Do not ignore a whole subject. Do not change `coverage_criteria`.
+- An ignore is allowed only when a structure check has shown the variants cannot be told apart. Do not ignore a whole subject. Do not change `coverage_criteria`.
 - Do not use `send` or `__send__` to invoke private methods in tests just to satisfy Mutant.
 - Do not stub or mock the system under test (stub collaborators instead).
 

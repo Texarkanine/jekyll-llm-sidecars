@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Jekyll::LlmsTxt::Configuration do
+RSpec.describe JekyllLlmsTxt::Configuration do
   subject(:configuration) { described_class.new(site) }
 
   let(:site_config) { {} }

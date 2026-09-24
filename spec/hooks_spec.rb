@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Jekyll::LlmsTxt::Hooks do
+RSpec.describe JekyllLlmsTxt::Hooks do
   let(:layout) { "<!DOCTYPE html><html><head><title>x</title></head><body>{{ content }}</body></html>\n" }
 
   def head(html)
@@ -72,7 +72,7 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
         { "a.md" => "---\ntitle: A\n---\nA\n" },
         "url" => "https://example.com"
       )
-      Jekyll::LlmsTxt.current_destinations = nil
+      JekyllLlmsTxt.current_destinations = nil
       leftover = File.join(site.dest, "old.txt")
       File.write(leftover, "old")
 
