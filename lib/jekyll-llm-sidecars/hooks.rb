@@ -38,15 +38,27 @@ module JekyllLlmSidecars
 
       state.files.each do |path, content|
         dest_path = Jekyll.sanitized_path(site.dest, path)
+        if sidecar?(path) && File.exist?(dest_path)
+          Jekyll.logger.warn(
+            "Jekyll LLM Sidecars:",
+            "Skipping sidecar #{path} because that file already exists"
+          )
+          next
+        end
+
         FileUtils.mkdir_p(File.dirname(dest_path))
-        File.write(dest_path, content)
+        File.write(dest_path, content, mode: "wb")
       end
+    end
+
+    def self.sidecar?(path)
+      path.end_with?(".md")
     end
 
     def self.documents(site)
       site.pages + site.documents
     end
-    private_class_method :documents
+    private_class_method :documents, :sidecar?
   end
 end
 

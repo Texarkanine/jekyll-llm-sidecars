@@ -129,5 +129,41 @@ RSpec.describe JekyllLlmSidecars::Hooks do
       expect(head(read_dest(site, "/2020/01/04/later.html")).scan("text/markdown").size).to eq(1)
       expect(head(read_dest(site, "/garden/note.html")).scan("text/markdown").size).to eq(1)
     end
+
+    it "warns and leaves a page that already occupies the sidecar path" do
+      allow(Jekyll.logger).to receive(:warn).and_call_original
+      expect(Jekyll.logger).to receive(:warn).with(
+        "Jekyll LLM Sidecars:",
+        a_string_including("/about.md")
+      ).and_call_original
+
+      site = process_site(
+        {
+          "_layouts/default.html" => layout,
+          "about.md" => "---\nlayout: default\npermalink: /about.md\n---\nSource body.\n"
+        },
+        "url" => "https://example.com"
+      )
+
+      written = read_dest(site, "/about.md")
+
+      expect(written).to include("<html>")
+      expect(written).to include("Source body.")
+    end
+
+    it "writes a sidecar in binary mode" do
+      site = build_site(
+        { "about.md" => page_body(title: "About") },
+        "url" => "https://example.com"
+      )
+      dest = File.join(site.dest, "about.md")
+
+      allow(File).to receive(:write).and_call_original
+      expect(File).to receive(:write).with(dest, anything, mode: "wb").and_call_original
+
+      site.process
+
+      expect(File.exist?(dest)).to be true
+    end
   end
 end

@@ -4,7 +4,7 @@
 
 ## Build
 
-- [ ] Failing test: existing sidecar destination is kept and a warning is issued
-- [ ] Failing test: destination files are written with binary mode
-- [ ] Implement both in `Hooks.write`
-- [ ] Full test suite passes
+- [x] Failing test: existing sidecar destination is kept and a warning is issued
+- [x] Failing test: destination files are written with binary mode
+- [x] Implement both in `Hooks.write`
+- [x] Full test suite passes

@@ -1,13 +1,15 @@
 # Active Context
 
 ## Current Task: sidecar-collision-and-binary-write
-**Phase:** COMPLEXITY-ANALYSIS - COMPLETE
+**Phase:** BUILD - COMPLETE
 
 ## What Was Done
 
-- Complexity is Level 1. Both code changes are in `Hooks.write`.
-- Include and exclude path identity is explored and is not part of this fix.
+- `Hooks.write` skips an existing sidecar and warns.
+- Destination writes use `mode: "wb"`.
+- 140 examples passed. RuboCop reported no offenses.
+- Include and exclude path matching was not changed.
 
 ## Next Step
 
-- Load the Level 1 workflow and build.
+- Level 1 QA.
