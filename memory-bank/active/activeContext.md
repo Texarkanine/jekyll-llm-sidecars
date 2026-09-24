@@ -1,7 +1,7 @@
 # Active Context
 
 ## Current Task: fix review crashes and missed names
-**Phase:** PLAN - COMPLETE
+**Phase:** PREFLIGHT - COMPLETE (PASS WITH ADVISORY)
 
 ## What Was Done
 - Planned three test-first fixes in `Scope#entry_time`, `ScopeBuilder#category_names`, and `Manifest#sidecar_path`, plus one README bullet for `/about` → `/about.md`.

@@ -24,3 +24,13 @@ Fix three review crashes (date sort, nil categories, extensionless sidecar paths
     - Archives, coverage, `create_llms_txt`, and the checkout directory are not rename targets
 * Insights
     - Product code is already `JekyllLlmSidecars` under `lib/jekyll-llm-sidecars/`
+
+## 2026-09-24 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Validated the Level 2 plan against codebase reality (scope.rb, scope_builder.rb, manifest.rb, both spec files)
+    - Wrote `memory-bank/active/.preflight-status` with first line `PASS WITH ADVISORY`
+* Decisions made
+    - Verdict is PASS WITH ADVISORY: all blocking checks passed, no plan edits needed; two non-blocking advisories recorded (precomputed sort-key sketch, acceptance-criterion-4 exclusion wording)
+* Insights
+    - Red expectations in the plan name the real failures (NoMethodError, ArgumentError, unchanged /about row)

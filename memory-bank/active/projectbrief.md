@@ -40,4 +40,4 @@ Any remaining reference that still uses the old project name is updated to `jeky
 1. Sorting a `Date` against a `Time` does not raise, and newer dates still sort first, then by relative path.
 2. A nil `categories` value does not raise while category scopes are built, and real category names still produce scopes.
 3. An extensionless URL such as `/about` becomes a sidecar path ending in `.md`. A trailing-slash URL still becomes `index.md`.
-4. A search of the checkout finds no leftover old project name except the directory path itself.
+4. A search of tracked product files finds no inaccurate old gem or module name. Archives, generated coverage, `create_llms_txt`, and the checkout directory stay as they are.
