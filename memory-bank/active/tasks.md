@@ -8,3 +8,10 @@
 - [x] Failing test: destination files are written with binary mode
 - [x] Implement both in `Hooks.write`
 - [x] Full test suite passes
+- [x] Rebuild updates a sidecar that the page does not occupy
+
+## QA
+
+- [x] First review failed: `File.exist?` treated the plugin's own sidecar as a collision
+- [x] The skip now uses Jekyll's destination for that path
+- [x] README states the skip

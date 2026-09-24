@@ -151,6 +151,21 @@ RSpec.describe JekyllLlmSidecars::Hooks do
       expect(written).to include("Source body.")
     end
 
+    it "rewrites a sidecar on a later build when the page does not occupy that path" do
+      site = process_site(
+        { "about.md" => page_body(title: "About", body: "First body.") },
+        "url" => "https://example.com"
+      )
+
+      File.write(File.join(site.source, "about.md"), page_body(title: "About", body: "Second body."))
+      site.process
+
+      written = read_dest(site, "/about.md")
+
+      expect(written).to include("Second body.")
+      expect(written).not_to include("First body.")
+    end
+
     it "writes a sidecar in binary mode" do
       site = build_site(
         { "about.md" => page_body(title: "About") },

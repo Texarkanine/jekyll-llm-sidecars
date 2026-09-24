@@ -36,9 +36,10 @@ module JekyllLlmSidecars
       state = site.instance_variable_get(:@llm_sidecars)
       return unless state
 
+      occupied = site_destinations(site)
       state.files.each do |path, content|
         dest_path = Jekyll.sanitized_path(site.dest, path)
-        if sidecar?(path) && File.exist?(dest_path)
+        if sidecar?(path) && occupied.include?(dest_path)
           Jekyll.logger.warn(
             "Jekyll LLM Sidecars:",
             "Skipping sidecar #{path} because that file already exists"
@@ -55,10 +56,16 @@ module JekyllLlmSidecars
       path.end_with?(".md")
     end
 
+    def self.site_destinations(site)
+      paths = {}
+      site.each_site_file { |item| paths[item.destination(site.dest)] = true }
+      paths
+    end
+
     def self.documents(site)
       site.pages + site.documents
     end
-    private_class_method :documents, :sidecar?
+    private_class_method :documents, :sidecar?, :site_destinations
   end
 end
 
