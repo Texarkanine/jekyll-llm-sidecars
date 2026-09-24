@@ -1,0 +1,19 @@
+PASS
+
+QA run 2026-09-24 against the build of memory-bank/active/tasks.md (Level 2, fix-review-crashes).
+
+Baseline: the Level 2 plan in tasks.md, units 1-4, plus the projectbrief requirements and acceptance criteria. Level 2, so no creative phase documents.
+
+Unit 1 (scope sort): entry_time returns date.to_time when date responds to to_time, else Time.at(0) - exactly the planned change, one conditional swapped for the old `date || Time.at(0)`. Both planned examples exist (later Time ahead of earlier Date; equal Date/Time by relative path) and use date.to_time for the equal instant per the challenge mitigation. Undated-item behavior unchanged. Pass.
+
+Unit 2 (nil categories): category_names is Array(item.data["categories"]) - exactly the planned change. Both planned examples exist (mixed nil-and-record; nil-only) and the pre-existing category example still passes. Array("record") is ["record"], so string categories keep working. Pass.
+
+Unit 3 (extensionless sidecar): sidecar_path appends .md when the last path segment has no dot, keeping the trailing-slash and extension branches - exactly the planned change. The planned example asserts both the /about URL and the /about.md sidecar path. README gained the planned `/about` -> `/about.md` bullet. Pass.
+
+Unit 4 (missed names): independent re-search of tracked files (excluding archives, coverage, and memory-bank/active) finds only create_llms_txt (explicitly preserved) and the intentional llms_txt backwards-compatibility config key with its tests. No inaccurate gem or module name remains. Pass.
+
+Semantic checks: KISS - each fix is one to three lines, no new abstraction. DRY - no duplication. YAGNI - nothing speculative. Completeness - all four units implemented, no stubs or TODOs. Regression - sort sentinel, category, and sidecar patterns preserved; full suite 138 examples, 0 failures; RuboCop clean on 27 files. Integrity - no hardcoded shortcuts or debug artifacts. Documentation - README updated as planned; no other doc owed.
+
+Preflight advisory 2 resolution: projectbrief acceptance criterion 4 itself names the exclusions (archives, coverage, create_llms_txt, checkout directory), so the scoped search is the intended reading. Confirmed, not a gap.
+
+Advisory (non-blocking): preflight advisory 1's precomputed sort-key sketch remains a valid future optimization; the comparator calls to_time per comparison. Not a defect in this fix.
