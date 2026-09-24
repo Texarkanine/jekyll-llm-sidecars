@@ -149,6 +149,9 @@ RSpec.describe JekyllLlmSidecars::Hooks do
 
       expect(written).to include("<html>")
       expect(written).to include("Source body.")
+      expect(written).not_to include("text/markdown")
+      expect(read_dest(site, "/llms.txt")).to include("[about.md](https://example.com/about.md)")
+      expect(read_dest(site, "/llms.txt")).not_to include("about.md.md")
     end
 
     it "rewrites a sidecar on a later build when the page does not occupy that path" do

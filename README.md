@@ -121,7 +121,7 @@ The sidecar URL is the page URL with its extension changed to `.md`:
 - `/foo/bar/` is a directory index, so it becomes `/foo/bar/index.md`.
 - `/about` has no extension, so it becomes `/about.md`.
 
-If that path is already where Jekyll wrote a page, a post, or a static file, the plugin warns and leaves that file in place. A sidecar from an earlier build is not one of those files, so the next build replaces it.
+If that path is already where Jekyll wrote a page, a post, or a static file, the plugin warns and leaves that file in place. The index lists that page at its own URL, and the page gets no alternate link. A sidecar from an earlier build is not one of those files, so the next build replaces it.
 
 ### llms-full.txt
 

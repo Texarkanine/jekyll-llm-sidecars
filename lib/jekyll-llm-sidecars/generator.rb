@@ -30,8 +30,12 @@ module JekyllLlmSidecars
       scopes = ScopeBuilder.call(site, configuration, entries)
       rows = Manifest.build(configuration, scopes, entries)
       sidecar_rows = rows.select { |row| row.kind == :sidecar }
-      sidecar_paths = sidecar_rows.to_h { |row| [row.entries.first, row.path] }
-      hrefs = sidecar_rows.to_h { |row| [row.entries.first.item, absolute(site, row.path)] }
+      occupied = site_destinations(site)
+      published = sidecar_rows.reject do |row|
+        occupied.include?(Jekyll.sanitized_path(site.dest, row.path))
+      end
+      sidecar_paths = published.to_h { |row| [row.entries.first, row.path] }
+      hrefs = published.to_h { |row| [row.entries.first.item, absolute(site, row.path)] }
 
       files = rows.map { |row| [row.path, render_row(row, site, sidecar_paths)] }
       JekyllLlmSidecars.current_destinations = files.map do |path, _content|
@@ -120,6 +124,12 @@ module JekyllLlmSidecars
 
     def heading_for(label)
       label.sub(/\A./, &:upcase)
+    end
+
+    def site_destinations(site)
+      paths = {}
+      site.each_site_file { |item| paths[item.destination(site.dest)] = true }
+      paths
     end
 
     def absolute(site, path)
