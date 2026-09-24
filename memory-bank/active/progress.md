@@ -78,3 +78,13 @@ Move the plugin onto the sibling layout: one `lib/jekyll-llms-txt/` directory, o
     - Rewrote each file as a single module with one `end`, matching the preflight advisory
 * Insights
     - The child `require "jekyll/llms_txt"` now fails with `LoadError`
+
+## 2026-09-24 - QA - COMPLETE
+
+* Work completed
+    - Semantic review of the sibling-layout move against the plan, brief, and lib/spec/docs
+* Decisions made
+    - PASS with advisories. Implementation is acceptable as-is
+    - Stale `systemPatterns.md` constants go to Reflect reconcile-persistent, not a Build rerun
+* Insights
+    - The live `lib/` tree is one entry file and one `jekyll-llms-txt/` directory. A stale glob listing of `lib/jekyll/` was not on disk

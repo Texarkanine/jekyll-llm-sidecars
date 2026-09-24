@@ -70,4 +70,14 @@ No new technology - validation not required
 - [x] Pre-Mortem complete
 - [x] Preflight
 - [x] Build
-- [ ] QA
+- [x] QA
+
+## QA Results
+
+✅ PASS
+
+Advisories (do not block):
+
+- `memory-bank/systemPatterns.md` still names `Jekyll::LlmsTxt::Entry` and `Jekyll::LlmsTxt.current_destinations`. Reflect's reconcile-persistent step should rewrite those two references. Not a Build miss: that file is excluded from the plan and assigned to Reflect.
+- The child `"jekyll-llms-txt"` example aborts if `Jekyll::LlmsTxt` is already defined, then only checks that `JekyllLlmsTxt` is defined after require. The in-process example is the suite contract that the nested constant is absent (preflight advisory).
+- The `"jekyll/llms_txt"` example asserts `LoadError` via the child's stderr, not by rescuing the exception class inside that process. It does not use the `defines_llms_txt?` false-return path the plan forbade.
