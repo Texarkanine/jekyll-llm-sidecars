@@ -1,0 +1,19 @@
+FAIL (fixable)
+
+Wrong-reference guard: progress.md is Level 2. This is the correct check file.
+
+Prerequisites: planning checkboxes in tasks.md are complete. No creative docs required at Level 2.
+
+TDD Plan Encoding: Unit 1 (constant and require path) is executable and lists stub / red / green in that order. Unit 2 is prose/policy (README, CONTRIBUTING) and owes no tests. No scheduled change-detectors. No step swap or strike.
+
+Convention: the planned tree (lib/jekyll-llms-txt.rb, lib/jekyll-llms-txt/*.rb, module JekyllLlmsTxt) matches the brief and the current gem entry. lib/jekyll/ contains only llms_txt.rb plus llms_txt/, so deleting that directory after the move is correct. Jekyll::Page / Renderer / Utils / Hooks / Generator are already qualified in lib; flattening the module does not change those lookups.
+
+Dependency / completeness (fixable): step 1.4 cannot go green as written.
+
+- jekyll-llms-txt.gemspec is not in the unit 1 file list. It does `require_relative "lib/jekyll-llms-txt/version"` and `spec.version = Jekyll::LlmsTxt::VERSION`. After version.rb becomes module JekyllLlmsTxt, `bundle exec rspec` evaluates the gemspec first and NameErrors. Known fix: add the gemspec to unit 1 files and set spec.version to JekyllLlmsTxt::VERSION in step 1.4.
+
+- Step 1.3 replaces Jekyll::LlmsTxt in specs. Step 1.4 only changes the module declaration. Qualified leftovers remain in lib: hooks.rb (Jekyll::LlmsTxt::Hooks.register call sites and current_destinations), generator.rb (Jekyll::LlmsTxt.current_destinations). Challenge 1 greps after the move, but the numbered green step runs rspec before that grep. Known fix: make step 1.4 use the same substitution as step 1.3 across lib and the gemspec.
+
+Conflict: renaming Jekyll::LlmsTxt is the public change the brief asks for. ../devblog is already out of scope. 0.1.0. Not a conflict.
+
+Advisory / radical innovation: do not delete the require "jekyll/llms_txt" example. Invert it: a child process that requires that path should LoadError (or leave JekyllLlmsTxt undefined). In the remaining require "jekyll-llms-txt" example, also abort if defined?(Jekyll::LlmsTxt). That makes AC1 (no lib/jekyll tree) and AC2 (no old constant) suite contracts, so a leftover shim or alias fails without a grep. Pair that with the gemspec as the other loader of VERSION. Do not apply this in preflight; it is for the operator to weigh against a one-example redesign.

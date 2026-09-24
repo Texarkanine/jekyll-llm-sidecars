@@ -23,3 +23,21 @@ Move the plugin onto the sibling layout: one `lib/jekyll-llms-txt/` directory, o
     - Do not edit `../devblog` in this task
 * Insights
     - The four Mutant ignores exist only because the code is inside `module Jekyll`
+
+## 2026-09-24 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Validated the move plan against lib/, spec/, the gemspec, mutant.yml, README, and CONTRIBUTING
+* Decisions made
+    - First line of `.preflight-status` is `FAIL (fixable)`
+* Insights
+    - Step 1.4 as written cannot go green: the gemspec still reads `Jekyll::LlmsTxt::VERSION`, and qualified `Jekyll::LlmsTxt` call sites remain in hooks.rb and generator.rb
+
+## 2026-09-24 - PLAN - COMPLETE
+
+* Work completed
+    - Re-planned the green step so the gemspec and every qualified `Jekyll::LlmsTxt` in lib change together
+* Decisions made
+    - `require "jekyll/llms_txt"` stays as an example that expects `LoadError`
+* Insights
+    - `bundle exec rspec` loads the gemspec before examples, so a stale `Jekyll::LlmsTxt::VERSION` NameErrors before any example runs

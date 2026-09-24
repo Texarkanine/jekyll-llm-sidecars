@@ -11,7 +11,7 @@ Move the plugin onto the family layout. One directory, `lib/jekyll-llms-txt/`. O
 ### Behaviors to Verify
 
 - `require "jekyll-llms-txt"` in a child process with an empty gem home and the parent load path → `JekyllLlmsTxt` is defined, and it was not defined before the require
-- `require "jekyll/llms_txt"` → this example is removed; that path is not part of the family pattern
+- `require "jekyll/llms_txt"` in that same child → `LoadError`
 - Existing generator, census, manifest, scope, body, hooks, entry, summary, and configuration examples, rewritten to `JekyllLlmsTxt` → the same outcomes as now
 
 ### Test Infrastructure
@@ -25,12 +25,12 @@ Move the plugin onto the family layout. One directory, `lib/jekyll-llms-txt/`. O
 
 ### 1. Constant and require path — executable
 
-- Files: `spec/version_spec.rb`, `spec/*_spec.rb`, `lib/jekyll-llms-txt.rb`, `lib/jekyll-llms-txt/**/*.rb`, `lib/jekyll/llms_txt.rb`, `lib/jekyll/llms_txt/**/*.rb`, `config/mutant.yml`
+- Files: `spec/version_spec.rb`, `spec/*_spec.rb`, `lib/jekyll-llms-txt.rb`, `lib/jekyll-llms-txt/**/*.rb`, `lib/jekyll/llms_txt.rb`, `lib/jekyll/llms_txt/**/*.rb`, `jekyll-llms-txt.gemspec`, `config/mutant.yml`
 
 1. Stub tests: in `spec/version_spec.rb`, leave `defines_llms_txt?` in place and empty the `"jekyll/llms_txt"` example body. Point the remaining example's description at `JekyllLlmsTxt`.
 2. Stub interface: none. The classes already exist.
-3. Write tests and run red: replace `Jekyll::LlmsTxt` with `JekyllLlmsTxt` in `spec/version_spec.rb` and every other `spec/*_spec.rb`. Delete the `"jekyll/llms_txt"` example. Run `bundle exec rspec`. The require example fails because the library still defines `Jekyll::LlmsTxt`.
-4. Write code and run green: move `lib/jekyll/llms_txt/*.rb` to `lib/jekyll-llms-txt/`. Delete `lib/jekyll/llms_txt.rb` and the empty `lib/jekyll/` directory. Change `module Jekyll` / `module LlmsTxt` to `module JekyllLlmsTxt`. Point `lib/jekyll-llms-txt.rb` at `require_relative "jekyll-llms-txt/..."`. In `config/mutant.yml`, set the subject to `JekyllLlmsTxt*` and delete the four `module Jekyll` ignore patterns. Run `bundle exec rspec`.
+3. Write tests and run red: replace `Jekyll::LlmsTxt` with `JekyllLlmsTxt` in `spec/version_spec.rb` and every other `spec/*_spec.rb`. The `"jekyll-llms-txt"` example also aborts if `defined?(Jekyll::LlmsTxt)`. The `"jekyll/llms_txt"` example expects `LoadError`. Run `bundle exec rspec`. The require example fails because the library still defines `Jekyll::LlmsTxt`.
+4. Write code and run green: move `lib/jekyll/llms_txt/*.rb` to `lib/jekyll-llms-txt/`. Delete `lib/jekyll/llms_txt.rb` and the empty `lib/jekyll/` directory. Replace every `Jekyll::LlmsTxt` in `lib/` and in `jekyll-llms-txt.gemspec` with `JekyllLlmsTxt`, including `spec.version`, `hooks.rb` register call sites, and `generator.rb` `current_destinations`. A module-declaration-only edit leaves those qualified names behind and `bundle exec rspec` NameErrors while loading the gemspec. Point `lib/jekyll-llms-txt.rb` at `require_relative "jekyll-llms-txt/..."`. In `config/mutant.yml`, set the subject to `JekyllLlmsTxt*` and delete the four `module Jekyll` ignore patterns. Run `bundle exec rspec`.
 
 ### 2. Documented constant — prose/policy
 

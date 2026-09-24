@@ -5,7 +5,7 @@
 
 ## What Was Done
 - Planned the move to `lib/jekyll-llms-txt/` and the module `JekyllLlmsTxt`.
-- Specs change first. The `require "jekyll/llms_txt"` example goes away. README and CONTRIBUTING follow the new constant.
+- Specs change first, including the gemspec version constant and every qualified `Jekyll::LlmsTxt` in lib. `require "jekyll/llms_txt"` expects `LoadError`. README and CONTRIBUTING follow the new constant.
 
 ## Next Step
 - Preflight
