@@ -1,7 +1,7 @@
 # Active Context
 
 - **Current Task:** rename-jekyll-llm-sidecars
-- **Phase:** QA - COMPLETE (PASS)
+- **Phase:** REFLECT - COMPLETE
 - **What Was Done:**
     - Moved `/home/mobaxterm/git/jekyll-llms-txt/lib/jekyll-llms-txt.rb` → `lib/jekyll-llm-sidecars.rb`, `lib/jekyll-llms-txt/` → `lib/jekyll-llm-sidecars/`, `jekyll-llms-txt.gemspec` → `jekyll-llm-sidecars.gemspec`.
     - Renamed `JekyllLlmsTxt` → `JekyllLlmSidecars` in every lib file (module lines, `scope_builders`, `current_destinations`, hook registrations) and every spec.
@@ -12,4 +12,4 @@
 - **Deviations:**
     - `lib/jekyll-llm-sidecars/scope_builder.rb`: `::Jekyll::Utils.slugify` → `Jekyll::Utils.slugify`. Mutant showed the leading `::` alive (equivalent constant lookup in the flat module). The survivor predates this task (introduced in `925b26d`, match-sibling-layout); CONTRIBUTING bucket A says simplify.
     - `spec/scope_spec.rb` `scoped_paths` helper split onto two lines because the longer module name exceeded the 120-column limit.
-- **Next Step:** QA (subagent).
+- **Next Step:** Operator runs `/niko-archive`. Operator also updates devblog to the new gem name, module, and `llm_sidecars:` block.
