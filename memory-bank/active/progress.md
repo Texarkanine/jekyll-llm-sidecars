@@ -48,3 +48,13 @@ Make `**` exclude globs match the directory trees the configuration names, and p
 * Insights
     - `File::FNM_PATHNAME` makes `X/**` (no trailing `/*`) stop matching more than one path segment deep - only `X/**/*` recurses fully. The shipped default exclude uses the old spelling
 
+## 2026-09-24 - PREFLIGHT - COMPLETE (PASS)
+
+* Work completed
+    - Re-verified both prior `FAIL (fixable)` findings against the revised plan: the `/assets/**/*` default-exclude migration and the seven-body corpus example update are both now in unit 1 and unit 2's stub-tests steps
+    - Checked TDD ordering, convention compliance, dependency impact (`Manifest::Row#scope` always populated for `:corpus` rows), conflict detection, and completeness against `Census`, `Generator`, `Manifest`, `Scope`, `ScopeBuilder`, `Entry`, `Summary`, and the spec suite
+* Decisions made
+    - PASS: no further plan changes required before Build
+* Insights
+    - No existing test asserts category or collection `llms-full.txt` text, so unit 3's new heading test adds coverage without colliding with an existing example
+

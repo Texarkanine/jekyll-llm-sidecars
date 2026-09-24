@@ -1,12 +1,11 @@
 # Active Context
 
 ## Current Task: Exclude globs and corpus headings
-**Phase:** PLAN - COMPLETE
+**Phase:** PREFLIGHT - COMPLETE (PASS)
 
 ## What Was Done
-- Revised the plan after preflight `FAIL (fixable)`
-- Default exclude `/assets/**` becomes `/assets/**/*`
-- The seven-body root corpus example is in the join-test update
+- Re-verified the revised plan against the codebase; both prior `FAIL (fixable)` findings are fixed in the plan
+- Recorded one advisory (a `Scope#root?` predicate) as non-blocking
 
 ## Next Step
-- Preflight validation
+- Build
