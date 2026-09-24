@@ -1,10 +1,11 @@
 # Active Context
 
 ## Current Task: match sibling gem layout
-**Phase:** COMPLEXITY-ANALYSIS - COMPLETE
+**Phase:** PLAN - COMPLETE
 
 ## What Was Done
-- Classified as Level 2. The layout and module name change to match the three sibling gems. The gem name stays `jekyll-llms-txt`.
+- Planned the move to `lib/jekyll-llms-txt/` and the module `JekyllLlmsTxt`.
+- Specs change first. The `require "jekyll/llms_txt"` example goes away. README and CONTRIBUTING follow the new constant.
 
 ## Next Step
-- Load the Level 2 workflow
+- Preflight
