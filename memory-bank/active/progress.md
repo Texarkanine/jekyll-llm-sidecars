@@ -43,3 +43,13 @@ Rename the gem `jekyll-llms-txt` to `jekyll-llm-sidecars` (gem, files, module `J
 * Insights
     - Advisories: replace every lib `JekyllLlmsTxt` reference, not only the module declarations. Widen the final sweep regex to include `@llms_txt`, `` `llms_txt` ``, `Jekyll::LlmsTxt`, and `jekyll/llms_txt`. Record a SumMem note for the rename, because the older notes name the old identifiers.
     - Innovation (optional): warn when a legacy `llms_txt:` block is present without `llm_sidecars:`, so devblog does not fall back to defaults silently.
+
+## 2026-09-24 - QA - COMPLETE
+
+* Work completed
+    - Semantic review of the build diff against the plan: PASS. Results are in `tasks.md`.
+    - Re-ran verification: 133 examples, 100% line coverage, RuboCop clean, gem builds with the new file list, old-name sweep clean.
+* Decisions made
+    - The out-of-plan `::Jekyll` → `Jekyll` edit in `scope_builder.rb` is accepted: it does not change behavior and kills a pre-existing Mutant survivor.
+* Insights
+    - Advisories only: devblog still needs the rename (operator), and a legacy `llms_txt:` block falls back to defaults silently by design.

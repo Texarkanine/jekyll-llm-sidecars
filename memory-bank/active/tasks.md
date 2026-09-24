@@ -90,4 +90,16 @@ No new technology - validation not required.
 - [x] Build
     - [x] Step 1: rename gem, module, and config key (specs red, then green)
     - [x] Step 2: documentation and memory bank
-- [ ] QA
+- [x] QA
+
+## QA Results
+
+PASS. The implementation matches the plan. No KISS, DRY, YAGNI, completeness, regression, integrity, or documentation violations.
+
+Verification: 133 examples pass, 100% line coverage, RuboCop clean, `gem build` succeeds with only `lib/jekyll-llm-sidecars*` paths in the file list. A hidden-file sweep for every old-name form (`jekyll-llms-txt`, `JekyllLlmsTxt`, `Jekyll::LlmsTxt`, `jekyll/llms_txt`, `@llms_txt`, `"llms_txt"`, `llms_txt:`, `llms-txt`) outside archives and caches finds only the intended `create_llms_txt` key and the old-key spec.
+
+Advisories (non-blocking):
+
+- `scope_builder.rb` `::Jekyll::Utils` → `Jekyll::Utils` is outside the plan. It is behavior-neutral (no `JekyllLlmSidecars::Jekyll` exists), it kills a pre-existing equivalent Mutant survivor, and it is recorded as a deviation. `::Jekyll` no longer appears anywhere in lib, so lib is consistent.
+- A site that still has an `llms_txt:` block gets defaults silently. This is the chosen clean break; the preflight's optional warning was declined and recorded. devblog is the one known consumer: its Gemfile entry, `_config.yml` block key, and `_plugins` scope-builder module reference need the rename (operator, out of scope).
+- `gem build` warns that `homepage_uri` and `source_code_uri` share a URL. That predates this task and does not block.

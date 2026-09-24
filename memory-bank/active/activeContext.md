@@ -1,7 +1,7 @@
 # Active Context
 
 - **Current Task:** rename-jekyll-llm-sidecars
-- **Phase:** BUILD - COMPLETE
+- **Phase:** QA - COMPLETE (PASS)
 - **What Was Done:**
     - Moved `/home/mobaxterm/git/jekyll-llms-txt/lib/jekyll-llms-txt.rb` → `lib/jekyll-llm-sidecars.rb`, `lib/jekyll-llms-txt/` → `lib/jekyll-llm-sidecars/`, `jekyll-llms-txt.gemspec` → `jekyll-llm-sidecars.gemspec`.
     - Renamed `JekyllLlmsTxt` → `JekyllLlmSidecars` in every lib file (module lines, `scope_builders`, `current_destinations`, hook registrations) and every spec.
