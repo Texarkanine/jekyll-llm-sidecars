@@ -1,0 +1,1 @@
+Scope sort uses to_time so Date and Time compare. Nil categories become []. An extensionless sidecar URL gets .md appended.

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "date"
 require "spec_helper"
 
 RSpec.describe JekyllLlmSidecars::ScopeBuilder do
@@ -72,6 +73,21 @@ RSpec.describe JekyllLlmSidecars::ScopeBuilder do
       expect(scoped_paths([undated, dated])).to eq(%w[a.md b.md])
     end
 
+    it "sorts a later Time ahead of an earlier Date" do
+      older = instance_double(Jekyll::Document, relative_path: "older.md", date: Date.new(2020, 1, 1))
+      newer = instance_double(Jekyll::Document, relative_path: "newer.md", date: Time.new(2020, 1, 2))
+
+      expect(scoped_paths([older, newer])).to eq(%w[newer.md older.md])
+    end
+
+    it "sorts a Date and an equal Time by relative path" do
+      date = Date.new(2020, 1, 1)
+      earlier_path = instance_double(Jekyll::Document, relative_path: "a.md", date: date)
+      later_path = instance_double(Jekyll::Document, relative_path: "b.md", date: date.to_time)
+
+      expect(scoped_paths([later_path, earlier_path])).to eq(%w[a.md b.md])
+    end
+
     it "orders entries newest date first, then by relative path" do
       site = build_site(
         "_posts/2020-01-03-beta.md" => page_body(title: "Beta"),
@@ -92,6 +108,30 @@ RSpec.describe JekyllLlmSidecars::ScopeBuilder do
     it "adds no category scope when categories are off" do
       site = build_site(
         "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [record]")
+      )
+
+      expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
+    end
+
+    it "builds category scopes when a page has a nil categories key" do
+      site = build_site(
+        {
+          "about.md" => page_body(title: "About", extra: "categories:"),
+          "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [record]")
+        },
+        "llm_sidecars" => { "include_categories" => true }
+      )
+      scopes = scopes_for(site)
+      record = scope_at(scopes, "/category/record/")
+
+      expect(record.entries.map { |entry| entry.item.data["title"] }).to eq(["Hello"])
+      expect(scopes.map(&:path_prefix)).to eq(["/", "/category/record/"])
+    end
+
+    it "adds no category scope when the only categories value is nil" do
+      site = build_site(
+        { "about.md" => page_body(title: "About", extra: "categories:") },
+        "llm_sidecars" => { "include_categories" => true }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])

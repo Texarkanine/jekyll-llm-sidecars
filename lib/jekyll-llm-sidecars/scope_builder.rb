@@ -59,7 +59,7 @@ module JekyllLlmSidecars
     end
 
     def category_names(item)
-      item.data.fetch("categories") { [] }
+      Array(item.data["categories"])
     end
 
     def category_prefix(name)

@@ -75,6 +75,9 @@ module JekyllLlmSidecars
     def sidecar_path(url)
       return "#{url}index.md" if url.end_with?("/")
 
+      leaf = url.rpartition("/").last
+      return "#{url}.md" unless leaf.include?(".")
+
       url.sub(/\.[^.]+\z/, ".md")
     end
 

@@ -119,6 +119,7 @@ The sidecar URL is the page URL with its extension changed to `.md`:
 
 - `/foo/bar/baz.html` becomes `/foo/bar/baz.md`.
 - `/foo/bar/` is a directory index, so it becomes `/foo/bar/index.md`.
+- `/about` has no extension, so it becomes `/about.md`.
 
 ### llms-full.txt
 

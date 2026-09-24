@@ -106,6 +106,15 @@ RSpec.describe JekyllLlmSidecars::Manifest do
       expect(sidecars.find { |row| row.entries == [slash] }.path).to eq("/foo/bar/index.md")
     end
 
+    it "appends .md when the page URL has no extension" do
+      rows, entries = rows_for("about.md" => page_body(title: "About", extra: "permalink: /about"))
+      about = entries.find { |entry| entry.item.data["title"] == "About" }
+      sidecar = rows.find { |row| row.kind == :sidecar && row.entries == [about] }
+
+      expect(about.item.url).to eq("/about")
+      expect(sidecar.path).to eq("/about.md")
+    end
+
     it "adds no sidecar rows when markdown is false" do
       rows, = rows_for(files, "llm_sidecars" => { "create_markdown" => false, "create_llms_full" => true })
 

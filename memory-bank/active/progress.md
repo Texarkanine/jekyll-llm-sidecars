@@ -25,6 +25,18 @@ Fix three review crashes (date sort, nil categories, extensionless sidecar paths
 * Insights
     - Product code is already `JekyllLlmSidecars` under `lib/jekyll-llm-sidecars/`
 
+## 2026-09-24 - BUILD - COMPLETE
+
+* Work completed
+    - Date and Time sort, nil categories, and extensionless sidecar paths, each test-first
+    - README bullet for `/about` → `/about.md`
+    - Full suite 138 examples, RuboCop clean, gem builds
+* Decisions made
+    - No rename edits. Remaining old-name hits are history or this task's own text
+* Insights
+    - `permalink: /about` is the URL `/about` under Jekyll 4.4.1
+
+
 ## 2026-09-24 - PREFLIGHT - COMPLETE
 
 * Work completed

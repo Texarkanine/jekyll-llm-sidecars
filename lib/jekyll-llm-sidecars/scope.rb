@@ -30,7 +30,9 @@ module JekyllLlmSidecars
     def entry_time(entry)
       item = entry.item
       date = item.date if item.respond_to?(:date)
-      date || Time.at(0)
+      return date.to_time if date.respond_to?(:to_time)
+
+      Time.at(0)
     end
 
     def relative_path(entry)
