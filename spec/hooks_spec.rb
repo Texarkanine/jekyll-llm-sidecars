@@ -45,26 +45,20 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
       expect(documents[1].output).to include('rel="alternate"')
     end
 
-    it "writes a nested category index into the destination" do
+    it "keeps llms.txt and deletes a file this plugin did not write" do
+      # Cleanup runs without a later write.
       site = process_site(
         {
+          "a.md" => "---\ntitle: A\n---\nA\n",
           "_posts/2020-01-02-hello.md" => "---\ntitle: Hello\ncategories: [record]\n---\nHi\n"
         },
         "url" => "https://example.com",
         "llms-txt" => { "categories" => true }
       )
-
-      expect(read_dest(site, "/category/record/llms.txt")).to include("Hello")
-    end
-
-    it "keeps llms.txt and deletes a file this plugin did not write" do
-      # Cleanup runs without a later write.
-      site = process_site(
-        { "a.md" => "---\ntitle: A\n---\nA\n" },
-        "url" => "https://example.com"
-      )
       leftover = File.join(site.dest, "old.txt")
       File.write(leftover, "old")
+
+      expect(read_dest(site, "/category/record/llms.txt")).to include("Hello")
 
       site.generate
       site.cleanup

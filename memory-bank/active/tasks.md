@@ -135,3 +135,16 @@ No new technology - validation not required. Nokogiri is not added.
 - [x] Preflight
 - [x] Build
 - [ ] QA
+
+## QA Results (2026-09-23) - FAIL
+
+Thirteen of fifteen findings remediated as prescribed; all recorded gates green (rspec 131/0, rubocop clean, mutant 2505/0 alive, seeds 1-3). Full findings in `memory-bank/active/.qa-validation-status`.
+
+Blocking:
+
+- Finding 13: `generator_spec.rb` "keeps llms.txt when cleanup runs without a later write" was kept, not deleted. The weaker duplicate remains alongside `hooks_spec.rb` "keeps llms.txt and deletes a file this plugin did not write".
+- Finding 14: `hooks_spec.rb` "writes a nested category index into the destination" was kept, not deleted. The weaker duplicate remains alongside the byte-exact `generator_spec.rb` "writes the root, category, and collection indexes".
+
+Build must rerun: delete each weaker duplicate and fold any unique mutant kill into a kept example under the correct subject (the plan's mitigation), then show `bundle exec mutant run` stays at 0 alive. If folding demonstrably cannot preserve the kill-set, escalate to Plan - the audit's delete remediation and its kill-set gate would conflict, and keeping both examples is not a sanctioned resolution.
+
+Advisory: `spec/body_spec.rb` has two examples the plan did not call for ("returns the source when render_with_liquid is false", "renders include_relative from the page directory"); decide keep-or-drop deliberately during the rework.

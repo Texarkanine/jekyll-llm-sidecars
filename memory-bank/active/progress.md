@@ -78,3 +78,29 @@ Fix every finding in `.slobac/2026-09-23T19-16-57/audit.md` using that report's 
     - `LiquidRenderer#file` records the normalized path on every call; `profile: true` is not required
     - After tag strip, the highlight sidecar text is `puts :hi\n`
     - On a root `marked.md`, `page.path` equals `page.name`, so the scheduled `stats_table` oracle would not kill a `item.path` → `item.name` mutant
+
+## 2026-09-23 - QA - COMPLETE (FAIL)
+
+* Work completed
+    - Reviewed build commit `671d8aa` against the audit, plan, and brief; wrote `memory-bank/active/.qa-validation-status` (first line `FAIL`)
+    - Confirmed 13 of 15 findings remediated as prescribed, no `lib/` change, gates green
+* Decisions made
+    - FAIL: findings 13 and 14 unremediated - both weaker duplicates (`generator_spec.rb` cleanup-keep, `hooks_spec.rb` nested category) were kept instead of deleted, and the plan's fold-don't-keep mitigation was not attempted on record
+    - Build must rerun to delete the duplicates and fold unique kills, or escalate to Plan if the kill-set gate genuinely forbids deletion
+* Insights
+    - The `stats_table` example's `docs/marked.md` fixture keeps `page.path` distinct from `page.name`, so the preflight's mutant-kill concern is handled
+    - `spec/body_spec.rb` carries two unplanned examples beyond the plan's move-8-add-1 scope (advisory)
+
+## 2026-09-23 - BUILD - COMPLETE
+
+* Work completed
+    - Folded the cleanup-keep assertion into "writes llms.txt into the destination" and deleted the separate generator example
+    - Folded the nested category read into the hooks cleanup example, before cleanup, and deleted the separate hooks example
+    - `bundle exec rspec`: 129 examples, 0 failures
+    - `bundle exec rubocop`: no offenses
+    - `bundle exec mutant run`: 2505 kills, 0 alive
+* Decisions made
+    - The nested file is asserted before the second cleanup, because that cleanup removes it
+* Insights
+    - A second `generate` plus `cleanup` deletes `/category/record/llms.txt` even though the first write created it
+

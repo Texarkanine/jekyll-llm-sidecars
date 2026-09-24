@@ -278,6 +278,12 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
       )
 
       expect(read_dest(site, "/llms.txt")).to include("#")
+
+      # Cleanup without a later write keeps the recorded destination.
+      site.generate
+      site.cleanup
+
+      expect(File.exist?(File.join(site.dest, "llms.txt"))).to be true
     end
 
     it "leaves only Jekyll static files on the site" do
@@ -291,19 +297,6 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
 
       expect(site.static_files).to all(be_a(Jekyll::StaticFile))
       expect(site.static_files.map(&:relative_path)).to include("/pic.txt")
-    end
-
-    it "keeps llms.txt when cleanup runs without a later write" do
-      site = process_site(
-        { "a.md" => "---\ntitle: A\n---\nA\n" },
-        "url" => "https://example.com"
-      )
-      path = File.join(site.dest, "llms.txt")
-
-      site.generate
-      site.cleanup
-
-      expect(File.exist?(path)).to be true
     end
 
     it "orders other collections by label" do

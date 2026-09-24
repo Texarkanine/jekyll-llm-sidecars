@@ -13,8 +13,13 @@
 - Asserted `Hooks.inject` leaves existing HTML unchanged when no build is stored
 
 ## Key Decisions
-- Mutant selects examples by the subject they execute. Assertions that kill `Body`, `Hooks.write`, and `Generator#generate` stayed on examples under those subjects
-- The nested category example stayed in `spec/hooks_spec.rb`. The cleanup-keep example stayed in `spec/generator_spec.rb`. The alternate-link check moved onto the sidecar example and looks inside `<head>`
+- Mutant selects examples by the subject they execute
+- Finding 13: the cleanup-keep assertion is on "writes llms.txt into the destination". The separate generator example is gone
+- Finding 14: the nested category read is on "keeps llms.txt and deletes a file this plugin did not write", before cleanup. The separate hooks example is gone
+
+## Next Step
+- QA review
+
 
 ## Files
 - `/home/mobaxterm/git/jekyll-llms-txt/spec/body_spec.rb`
