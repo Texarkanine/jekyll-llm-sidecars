@@ -38,29 +38,29 @@ Sidecars are source bodies, not HTML-to-Markdown conversions. Front matter is re
 ## Configuration
 
 ```yaml
-llms-txt:
-  markdown: true
-  llms_txt: true
-  llms_full: false
-  categories: false
-  collections: false
-  include:
+llms_txt:
+  create_markdown: true
+  create_llms_txt: true
+  create_llms_full: false
+  include_categories: false
+  include_collections: false
+  include_paths:
     - pages
     - posts
-  exclude:
+  exclude_paths:
     - /README.md
     - /CHANGELOG.md
     - /404.html
     - /assets/**/*
 ```
 
-- `markdown`: generate sidecars for Markdown sources, link `llms.txt` to those sidecars, and add HTML alternate links. Default: `true`.
-- `llms_txt`: generate `llms.txt` at the site root and for each active scope. Default: `true`.
-- `llms_full`: generate `llms-full.txt` at the site root and for each active scope. Default: `false`.
-- `categories`: include a scope for each non-empty category after include/exclude filtering. Default: `false`.
-- `collections`: include a scope under `/{label}/` for each included writeable collection (not `pages`/`posts`). Default: `false`.
-- `include`: `pages`, `posts`, and output collection names. Default: `[pages, posts]`.
-- `exclude`: URL, Markdown path, or source path globs. `**` matches a directory, its index, and everything under it. Default: `[/README.md, /CHANGELOG.md, /404.html, /assets/**/*]`.
+- `create_markdown`: generate sidecars for Markdown sources, link `llms.txt` to those sidecars, and add HTML alternate links. Default: `true`.
+- `create_llms_txt`: generate `llms.txt` at the site root and for each active scope. Default: `true`.
+- `create_llms_full`: generate `llms-full.txt` at the site root and for each active scope. Default: `false`.
+- `include_categories`: include a scope for each non-empty category after include/exclude filtering. Default: `false`.
+- `include_collections`: include a scope under `/{label}/` for each included writeable collection (not `pages`/`posts`). Default: `false`.
+- `include_paths`: `pages`, `posts`, and output collection names. Default: `[pages, posts]`.
+- `exclude_paths`: URL, Markdown path, or source path globs. `**` matches a directory, its index, and everything under it. Default: `[/README.md, /CHANGELOG.md, /404.html, /assets/**/*]`.
 
 Per-entry opt-out:
 

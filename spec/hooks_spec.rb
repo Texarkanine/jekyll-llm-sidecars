@@ -53,7 +53,7 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
           "_posts/2020-01-02-hello.md" => "---\ntitle: Hello\ncategories: [record]\n---\nHi\n"
         },
         "url" => "https://example.com",
-        "llms-txt" => { "categories" => true }
+        "llms_txt" => { "include_categories" => true }
       )
       leftover = File.join(site.dest, "old.txt")
       File.write(leftover, "old")
@@ -123,7 +123,7 @@ RSpec.describe Jekyll::LlmsTxt::Hooks do
         "baseurl" => "/blog",
         "permalink" => "/:year/:month/:day/:title:output_ext",
         "collections" => { "garden" => { "output" => true } },
-        "llms-txt" => { "include" => %w[pages posts garden] }
+        "llms_txt" => { "include_paths" => %w[pages posts garden] }
       )
 
       expect(head(read_dest(site, "/2020/01/04/later.html")).scan("text/markdown").size).to eq(1)

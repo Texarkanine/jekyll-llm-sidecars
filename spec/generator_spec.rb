@@ -29,11 +29,11 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
       "baseurl" => "/blog",
       "permalink" => "/:year/:month/:day/:title:output_ext",
       "collections" => { "garden" => { "output" => true } },
-      "llms-txt" => {
-        "llms_full" => true,
-        "categories" => true,
-        "collections" => true,
-        "include" => %w[pages posts garden]
+      "llms_txt" => {
+        "create_llms_full" => true,
+        "include_categories" => true,
+        "include_collections" => true,
+        "include_paths" => %w[pages posts garden]
       }
     }
   end
@@ -189,7 +189,7 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
           "b.md" => "---\ntitle: B\n---\nB\n"
         },
         "url" => "https://example.com",
-        "llms-txt" => { "llms_full" => true }
+        "llms_txt" => { "create_llms_full" => true }
       )
 
       expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
@@ -202,7 +202,7 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
           "b.md" => "---\ntitle: B\n---\nB"
         },
         "url" => "https://example.com",
-        "llms-txt" => { "llms_full" => true }
+        "llms_txt" => { "create_llms_full" => true }
       )
 
       expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
@@ -215,7 +215,7 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
           "_posts/2020-01-04-beta.md" => "---\ntitle: Beta\ncategories: [essay]\n---\nB\n\n"
         },
         "url" => "https://example.com",
-        "llms-txt" => { "llms_full" => true, "categories" => true }
+        "llms_txt" => { "create_llms_full" => true, "include_categories" => true }
       )
 
       expect(read_dest(site, "/category/essay/llms-full.txt")).to eq("# Beta\n\nB\n\n# Alpha\n\nA")
@@ -322,7 +322,7 @@ RSpec.describe Jekyll::LlmsTxt::Generator do
           "zeta" => { "output" => true },
           "alpha" => { "output" => true }
         },
-        "llms-txt" => { "collections" => true, "include" => %w[alpha zeta] },
+        "llms_txt" => { "include_collections" => true, "include_paths" => %w[alpha zeta] },
         "title" => "T"
       )
       text = read_dest(site, "/llms.txt")

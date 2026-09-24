@@ -26,6 +26,6 @@ Generated files and HTML alternate links match the output and configuration cont
 ## Key Constraints
 
 - Sidecars are source bodies. Liquid runs unless the entry sets `render_with_liquid: false`.
-- `llms_txt`, `llms_full`, and `markdown` choose which artifacts are written. `categories`, `collections`, and registered scope builders choose which scopes exist.
-- Default include list is pages and posts. Default exclude list is `/README.md`, `/CHANGELOG.md`, `/404.html`, and `/assets/**/*`. A site that sets `exclude` replaces that list.
+- `create_llms_txt`, `create_llms_full`, and `create_markdown` choose which artifacts are written. `include_categories`, `include_collections`, and registered scope builders choose which scopes exist.
+- Default include list is pages and posts. Default exclude list is `/README.md`, `/CHANGELOG.md`, `/404.html`, and `/assets/**/*`. A site that sets `exclude_paths` replaces that list.
 - The project is licensed under the GNU Affero General Public License, version 3 (`LICENSE`).

@@ -1,0 +1,1 @@
+The llms_txt config block keys are create_markdown, create_llms_txt, create_llms_full, include_categories, include_collections, include_paths, and exclude_paths.

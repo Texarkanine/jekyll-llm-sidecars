@@ -42,7 +42,7 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
     end
 
     it "writes an index row per scope and no corpus row by default" do
-      rows, = rows_for(files, "llms-txt" => { "categories" => true })
+      rows, = rows_for(files, "llms_txt" => { "include_categories" => true })
       paths = rows.select { |row| row.kind == :index }.map(&:path)
 
       expect(paths).to include("/llms.txt", "/category/record/llms.txt")
@@ -51,7 +51,14 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
     end
 
     it "omits index rows when llms_txt is false" do
-      rows, = rows_for(files, "llms-txt" => { "llms_txt" => false, "llms_full" => true, "categories" => true })
+      rows, = rows_for(
+        files,
+        "llms_txt" => {
+          "create_llms_txt" => false,
+          "create_llms_full" => true,
+          "include_categories" => true
+        }
+      )
 
       expect(rows.none? { |row| row.kind == :index }).to be true
       expect(rows.select { |row| row.kind == :corpus }.map(&:path)).to include(
@@ -64,7 +71,7 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
     it "puts the same Entry on each index and corpus that lists it" do
       rows, entries = rows_for(
         files,
-        "llms-txt" => { "llms_full" => true, "categories" => true }
+        "llms_txt" => { "create_llms_full" => true, "include_categories" => true }
       )
       hello = entries.find { |entry| entry.item.data["title"] == "Hello" }
       listed = rows.select { |row| %i[index corpus].include?(row.kind) && row.entries.include?(hello) }
@@ -79,7 +86,7 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
     end
 
     it "keeps HTML entries on indexes and off corpus and sidecar rows" do
-      rows, entries = rows_for(files, "llms-txt" => { "llms_full" => true })
+      rows, entries = rows_for(files, "llms_txt" => { "create_llms_full" => true })
       html = entries.find { |entry| entry.item.relative_path == "page.html" }
       index = rows.find { |row| row.path == "/llms.txt" }
       corpus = rows.find { |row| row.path == "/llms-full.txt" }
@@ -100,7 +107,7 @@ RSpec.describe Jekyll::LlmsTxt::Manifest do
     end
 
     it "adds no sidecar rows when markdown is false" do
-      rows, = rows_for(files, "llms-txt" => { "markdown" => false, "llms_full" => true })
+      rows, = rows_for(files, "llms_txt" => { "create_markdown" => false, "create_llms_full" => true })
 
       expect(rows.none? { |row| row.kind == :sidecar }).to be true
       corpus = rows.find { |row| row.path == "/llms-full.txt" }

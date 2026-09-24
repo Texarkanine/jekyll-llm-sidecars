@@ -62,7 +62,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
     it "skips an include name that is not a collection" do
       site = build_site(
         base_files,
-        "llms-txt" => { "include" => %w[pages posts missing] }
+        "llms_txt" => { "include_paths" => %w[pages posts missing] }
       )
 
       expect(relative_paths(census_for(site))).to eq(["_posts/2020-01-02-hello.md", "about.md"])
@@ -72,7 +72,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
       site = build_site(
         base_files,
         "collections" => { "garden" => { "output" => true } },
-        "llms-txt" => { "include" => %w[pages posts garden] }
+        "llms_txt" => { "include_paths" => %w[pages posts garden] }
       )
 
       expect(relative_paths(census_for(site))).to include("_garden/note.md")
@@ -82,7 +82,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
       site = build_site(
         base_files,
         "collections" => { "garden" => { "output" => true } },
-        "llms-txt" => { "include" => %w[garden] }
+        "llms_txt" => { "include_paths" => %w[garden] }
       )
       entries = nil
       lines = deprecation_lines { entries = census_for(site) }
@@ -92,7 +92,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
     end
 
     it "selects nothing and records no to_ary warning when an include name is missing" do
-      site = build_site(base_files, "llms-txt" => { "include" => %w[missing] })
+      site = build_site(base_files, "llms_txt" => { "include_paths" => %w[missing] })
       entries = nil
       lines = deprecation_lines { entries = census_for(site) }
 
@@ -129,7 +129,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
     it "drops a document when a glob matches its URL" do
       site = build_site("about.md" => page_body(title: "About"), "keep.md" => page_body(title: "Keep"))
       about = site.pages.find { |page| page.name == "about.md" }
-      site.config["llms-txt"] = { "exclude" => [about.url] }
+      site.config["llms_txt"] = { "exclude_paths" => [about.url] }
 
       paths = relative_paths(census_for(site))
 
@@ -139,7 +139,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
 
     it "drops a document when a glob matches its markdown path" do
       site = build_site("about.md" => page_body(title: "About"), "keep.md" => page_body(title: "Keep"))
-      site.config["llms-txt"] = { "exclude" => ["/about.md"] }
+      site.config["llms_txt"] = { "exclude_paths" => ["/about.md"] }
 
       expect(relative_paths(census_for(site))).to eq(["keep.md"])
     end
@@ -147,7 +147,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
     it "drops a document when a glob matches its source path" do
       site = build_site("about.md" => page_body(title: "About"), "keep.md" => page_body(title: "Keep"))
       about = site.pages.find { |page| page.name == "about.md" }
-      site.config["llms-txt"] = { "exclude" => [about.path] }
+      site.config["llms_txt"] = { "exclude_paths" => [about.path] }
 
       expect(relative_paths(census_for(site))).to eq(["keep.md"])
     end
@@ -157,7 +157,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
         "tags/index.md" => page_body(title: "Tags", extra: "permalink: /tags/index.html"),
         "keep.md" => page_body(title: "Keep")
       )
-      site.config["llms-txt"] = { "exclude" => ["/tags/**/*"] }
+      site.config["llms_txt"] = { "exclude_paths" => ["/tags/**/*"] }
 
       expect(relative_paths(census_for(site))).to eq(["keep.md"])
     end
@@ -167,7 +167,7 @@ RSpec.describe Jekyll::LlmsTxt::Census do
         "error/404.md" => page_body(title: "Missing", extra: "permalink: /error/404.html"),
         "keep.md" => page_body(title: "Keep")
       )
-      site.config["llms-txt"] = { "exclude" => ["/error/**/*"] }
+      site.config["llms_txt"] = { "exclude_paths" => ["/error/**/*"] }
 
       expect(relative_paths(census_for(site))).to eq(["keep.md"])
     end

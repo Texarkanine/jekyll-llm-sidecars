@@ -105,7 +105,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
           "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [record]"),
           "_posts/2020-01-03-other.md" => page_body(title: "Other", extra: "categories: [record, news]")
         },
-        "llms-txt" => { "categories" => true }
+        "llms_txt" => { "include_categories" => true }
       )
       scopes = scopes_for(site)
       record = scope_at(scopes, "/category/record/")
@@ -120,7 +120,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
     it "uses the jekyll-archives category permalink and slug mode" do
       site = build_site(
         { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: 'categories: ["Hello World_X"]') },
-        "llms-txt" => { "categories" => true },
+        "llms_txt" => { "include_categories" => true },
         "jekyll-archives" => {
           "permalinks" => { "category" => "/archive/:name/" },
           "slug_mode" => "raw"
@@ -133,7 +133,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
     it "uses /category/:name/ when archives does not set a permalink" do
       site = build_site(
         { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: 'categories: ["Hello World"]') },
-        "llms-txt" => { "categories" => true }
+        "llms_txt" => { "include_categories" => true }
       )
 
       expect(scope_at(scopes_for(site), "/category/hello-world/").title).to eq("Hello World")
@@ -142,7 +142,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
     it "skips a category whose documents were all filtered out" do
       site = build_site(
         { "_posts/2020-01-02-hidden.md" => page_body(title: "Hidden", extra: "llms: false\ncategories: [secret]") },
-        "llms-txt" => { "categories" => true }
+        "llms_txt" => { "include_categories" => true }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -152,7 +152,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
       site = build_site(
         { "_garden/note.md" => page_body(title: "Note") },
         "collections" => { "garden" => { "output" => true } },
-        "llms-txt" => { "include" => %w[pages posts garden] }
+        "llms_txt" => { "include_paths" => %w[pages posts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -166,7 +166,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
           "_posts/2020-01-02-hello.md" => page_body(title: "Hello")
         },
         "collections" => { "garden" => { "output" => true } },
-        "llms-txt" => { "collections" => true, "include" => %w[pages posts garden] }
+        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
       )
       garden = scope_at(scopes_for(site), "/garden/")
 
@@ -180,7 +180,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
       site = build_site(
         { "_garden/note.md" => page_body(title: "Note") },
         "collections" => { "garden" => { "output" => false } },
-        "llms-txt" => { "collections" => true, "include" => %w[pages posts garden] }
+        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).not_to include("/garden/")
@@ -193,7 +193,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
           "drafts" => { "output" => false },
           "garden" => { "output" => true }
         },
-        "llms-txt" => { "collections" => true, "include" => %w[pages posts missing drafts garden] }
+        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts missing drafts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/", "/garden/"])
@@ -203,7 +203,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
       site = build_site(
         { "about.md" => page_body(title: "About") },
         "collections" => { "garden" => { "output" => true } },
-        "llms-txt" => { "collections" => true, "include" => %w[pages posts garden] }
+        "llms_txt" => { "include_collections" => true, "include_paths" => %w[pages posts garden] }
       )
 
       expect(scopes_for(site).map(&:path_prefix)).to eq(["/"])
@@ -213,7 +213,7 @@ RSpec.describe Jekyll::LlmsTxt::ScopeBuilder do
       site = build_site(
         { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [record]") },
         "collections" => { "posts" => { "output" => true } },
-        "llms-txt" => { "categories" => true, "collections" => true }
+        "llms_txt" => { "include_categories" => true, "include_collections" => true }
       )
       census = entries_for(site)
       Jekyll::LlmsTxt.register_scope_builder do |_site, _configuration, entries|

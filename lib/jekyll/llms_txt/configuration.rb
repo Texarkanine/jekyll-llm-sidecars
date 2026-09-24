@@ -2,7 +2,7 @@
 
 module Jekyll
   module LlmsTxt
-    # Reads the `llms-txt` config block. A missing block uses the README defaults.
+    # Reads the `llms_txt` config block. A missing block uses the README defaults.
     # A key that is present wins, including an explicit false or an empty list.
     class Configuration
       DEFAULT_INCLUDE = %w[pages posts].freeze
@@ -10,43 +10,43 @@ module Jekyll
 
       # @param site [Jekyll::Site]
       def initialize(site)
-        block = site.config["llms-txt"]
+        block = site.config["llms_txt"]
         @block = block.is_a?(Hash) ? block : {}
       end
 
       # @return [Boolean]
       def markdown
-        flag("markdown", true)
+        flag("create_markdown", true)
       end
 
       # @return [Boolean]
       def llms_txt
-        flag("llms_txt", true)
+        flag("create_llms_txt", true)
       end
 
       # @return [Boolean]
       def llms_full
-        flag("llms_full", false)
+        flag("create_llms_full", false)
       end
 
       # @return [Boolean]
       def categories
-        flag("categories", false)
+        flag("include_categories", false)
       end
 
       # @return [Boolean]
       def collections
-        flag("collections", false)
+        flag("include_collections", false)
       end
 
       # @return [Array<String>]
       def include
-        list("include", DEFAULT_INCLUDE)
+        list("include_paths", DEFAULT_INCLUDE)
       end
 
       # @return [Array<String>]
       def exclude
-        list("exclude", DEFAULT_EXCLUDE)
+        list("exclude_paths", DEFAULT_EXCLUDE)
       end
 
       private
