@@ -79,6 +79,16 @@ Move the plugin onto the sibling layout: one `lib/jekyll-llms-txt/` directory, o
 * Insights
     - The child `require "jekyll/llms_txt"` now fails with `LoadError`
 
+## 2026-09-24 - REFLECT - COMPLETE
+
+* Work completed
+    - Wrote `memory-bank/active/reflection/reflection-match-sibling-layout.md`
+    - Updated `systemPatterns.md` to `JekyllLlmsTxt`
+* Decisions made
+    - Leave `../devblog` for a follow-up
+* Insights
+    - Replacing the string `Jekyll::LlmsTxt` does not rewrite `module Jekyll` / `module LlmsTxt`
+
 ## 2026-09-24 - QA - COMPLETE
 
 * Work completed
