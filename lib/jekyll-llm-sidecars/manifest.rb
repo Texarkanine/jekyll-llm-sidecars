@@ -69,6 +69,8 @@ module JekyllLlmSidecars
     private
 
     def output_path(prefix, filename)
+      prefix = "#{prefix}/" unless prefix.end_with?("/")
+
       "#{prefix}#{filename}"
     end
 

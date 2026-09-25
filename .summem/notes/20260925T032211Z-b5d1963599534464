@@ -1,0 +1,1 @@
+Category index paths insert a slash when the permalink prefix does not end in one, so /category/:name becomes /category/news/llms.txt.

@@ -41,6 +41,18 @@ RSpec.describe JekyllLlmSidecars::Manifest do
       expect(rows.map(&:path)).to include("/note.md")
     end
 
+    it "inserts a slash when a category permalink has none" do
+      rows, = rows_for(
+        { "_posts/2020-01-02-hello.md" => page_body(title: "Hello", extra: "categories: [news]") },
+        "llm_sidecars" => { "include_categories" => true, "create_llms_full" => true },
+        "jekyll-archives" => { "permalinks" => { "category" => "/category/:name" } }
+      )
+      paths = rows.map(&:path)
+
+      expect(paths).to include("/category/news/llms.txt", "/category/news/llms-full.txt")
+      expect(paths).not_to include("/category/newsllms.txt")
+    end
+
     it "writes an index row per scope and no corpus row by default" do
       rows, = rows_for(files, "llm_sidecars" => { "include_categories" => true })
       paths = rows.select { |row| row.kind == :index }.map(&:path)
