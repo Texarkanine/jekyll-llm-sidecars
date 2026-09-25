@@ -1,0 +1,19 @@
+usage: opensource
+
+integration:
+  name: rspec
+
+includes:
+  - lib
+  - spec
+
+requires:
+  - ./spec/support/mutant_setup.rb
+
+matcher:
+  subjects:
+    - JekyllLlmSidecars*
+
+mutation:
+  # A neutral that runs the generator suite can exceed the 5s default.
+  timeout: 30.0

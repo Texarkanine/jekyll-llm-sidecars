@@ -1,0 +1,1 @@
+Entry.new returns the Entry already registered for that document object. Census clears the table at the start of each build.

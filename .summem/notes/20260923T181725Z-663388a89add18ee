@@ -1,0 +1,1 @@
+Devblog _plugins/20_llms_scope_builders.rb requires jekyll/llms and calls Jekyll::Llms; this gem's namespace is Jekyll::LlmsTxt via jekyll-llms-txt and jekyll/llms_txt.

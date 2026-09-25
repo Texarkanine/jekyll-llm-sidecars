@@ -1,0 +1,1 @@
+llms-full.txt concatenates sidecar bodies with one newline between them and does not chomp.

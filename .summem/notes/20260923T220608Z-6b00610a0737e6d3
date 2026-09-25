@@ -1,0 +1,1 @@
+Jekyll::Page#dir is the URL destination directory, not the source directory Page.new expects.

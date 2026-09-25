@@ -1,0 +1,1 @@
+Jekyll 4.4 skips Liquid when the body has no tag, and a nil Page path crashes LiquidRenderer#normalize_path before Liquid runs.

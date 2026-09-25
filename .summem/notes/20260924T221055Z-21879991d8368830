@@ -1,0 +1,1 @@
+A sidecar is skipped only when a Jekyll site file destination matches that path. File.exist? also matches the previous sidecar, because keep_destinations preserves it through clean.

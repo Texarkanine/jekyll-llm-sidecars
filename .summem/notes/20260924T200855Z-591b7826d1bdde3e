@@ -1,0 +1,1 @@
+RubyGems blocks the name jekyll-llms-txt: GemTypo strips -/_ and uppercases, so it equals jekyll-llmstxt (Kyle Gao, 2024-12 release, protected until 2029-12). Any -/_ variant fails.

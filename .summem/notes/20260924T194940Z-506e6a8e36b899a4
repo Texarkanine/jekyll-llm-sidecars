@@ -1,0 +1,1 @@
+Release needs repo var HELPER_APP_ID, secrets HELPER_APP_PRIVATE_KEY and CODECOV_TOKEN, env rubygems.org, RubyGems trusted publisher. Codecov upload runs only in the release job.

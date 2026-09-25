@@ -1,0 +1,1 @@
+A repo-wide rg --hidden must exclude .mutant/ or the Mutant cache floods the output.

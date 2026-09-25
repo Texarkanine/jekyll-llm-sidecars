@@ -1,0 +1,1 @@
+Gem renamed 2026-09-24: jekyll-llm-sidecars, module JekyllLlmSidecars, lib/jekyll-llm-sidecars/, config block llm_sidecars:. Older notes naming jekyll-llms-txt / JekyllLlmsTxt / llms_txt: block mean these.

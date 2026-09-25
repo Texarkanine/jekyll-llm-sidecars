@@ -1,0 +1,1 @@
+Exclude globs use File.fnmatch with FNM_EXTGLOB and FNM_PATHNAME. Default assets glob is /assets/**/*. A non-root llms-full.txt starts each document with an H1 of its title. Bodies are chomped and joined by two newlines.

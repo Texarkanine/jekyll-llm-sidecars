@@ -1,0 +1,1 @@
+Mutant runs only the examples that executed the mutated subject. A kill in another example group does not cover that subject.
