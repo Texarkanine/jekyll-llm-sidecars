@@ -1,0 +1,17 @@
+FAIL
+
+QA review of sidecar-liquid-cache (Level 1), 2026-09-24.
+
+Blocking:
+1. Documentation - memory-bank/systemPatterns.md line 9 still says "The body slot calls `Jekyll::Renderer#render_liquid`." The build replaced that call with `Liquid::Template.parse(content, line_numbers: true).render!(payload, info)`. The systemPatterns rule requires a surgical fix when completed work invalidates content; this line now misdescribes the exact mechanism this task changed and would mislead any future work touching `Body`.
+
+Advisories (non-blocking):
+1. Liquid parse warnings are no longer logged. Jekyll's `render_liquid` logs `template.warnings` via `Jekyll.logger.warn`; the new code drops them. Strict modes still raise (covered by specs); only non-strict diagnostics are quieter.
+2. On Liquid error, Jekyll's `render_liquid` logs a formatted "Liquid Exception" with the document path before re-raising. The new code raises raw - same failure semantics, less path context in the message.
+3. `--profile` stats no longer count sidecar renders (Jekyll's increment_count/bytes/time are bypassed). Arguably more correct; negligible.
+
+Verified:
+- Requirements 1-4 and acceptance criteria 1-3 all met. Regression spec matches the brief: Liquid tag + fence, `:pre_render` rewrites the fence, HTML contains the rewrite, sidecar keeps the fence with Liquid expanded.
+- Parse options parity with Jekyll (`line_numbers: true`); payload/registers parity; `reset_template_assigns` not needed (fresh template per call).
+- No remaining callers of the removed path; KISS/DRY/YAGNI clean; no debris.
+- Re-ran verification: RSpec 143 examples, 0 failures, 100% line coverage; RuboCop 27 files, no offenses.

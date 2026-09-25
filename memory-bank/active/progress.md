@@ -24,3 +24,14 @@ Stop the sidecar from parsing a document into Jekyll's path-keyed Liquid cache d
     - Stay in the generate phase. Do not invalidate Jekyll's liquid cache and do not move the body snapshot to after `:pre_render`
 * Insights
     - The failing HTML still showed `FENCE` until the path-keyed parse was removed. The sidecar expectation `T\n\nFENCE\n` held on both sides of the fix
+
+## 2026-09-24 - QA - COMPLETE (FAIL)
+
+* Work completed
+    - Semantic review of `body.rb` and `body_spec.rb` against the brief; re-ran RSpec (143 examples, 0 failures, 100% coverage) and RuboCop (clean)
+    - Confirmed parity with Jekyll's `render_liquid` on parse options, payload, and registers by reading the installed Jekyll 4.4.1 source
+* Decisions made
+    - FAIL on one documentation finding: `systemPatterns.md` still claims the body slot calls `Jekyll::Renderer#render_liquid`; Build must rerun for that one-line fix
+    - Three advisories accepted as-is: dropped Liquid warning logs, raw (unformatted) error re-raise, sidecar renders absent from `--profile` stats
+* Insights
+    - The implementation itself is minimal and correct; the only gap is the memory bank describing the mechanism this task replaced
