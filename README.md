@@ -49,12 +49,11 @@ Build your site as usual. You do not need any configuration.
 bundle exec jekyll build
 ```
 
-Set `url` in `_config.yml`, because all links in the output are absolute URLs made from `url` and `baseurl`. The site `title` and `description` become the heading and summary of `/llms.txt`. For example, this `_config.yml`:
+The site `title` and `description` become the heading and summary of `/llms.txt`. Links are the page path, with the site `url` and `baseurl` in front when those are set. For example, this `_config.yml`:
 
 ```yaml
 title: Example Blog
 description: Notes on things.
-url: https://example.com
 ```
 
 gives this `/llms.txt`:
@@ -66,13 +65,13 @@ gives this `/llms.txt`:
 
 ## Posts
 
-- [Second](https://example.com/meta/2024/06/01/second.md): Second post body.
-- [Hello, World](https://example.com/meta/2024/05/01/hello-world.md): The first post.
+- [Second](/meta/2024/06/01/second.md): Second post body.
+- [Hello, World](/meta/2024/05/01/hello-world.md): The first post.
 
 ## Pages
 
-- [About](https://example.com/about.md)
-- [Contact](https://example.com/contact.html)
+- [About](/about.md)
+- [Contact](/contact.html)
 ```
 
 `Hello, World` has a `description` in its front matter, so that text follows the link. `Second` has no description, so Jekyll's excerpt of the post follows the link. `Contact` is an HTML source file, so it has no sidecar and the link goes to its HTML page.
@@ -100,7 +99,7 @@ It also adds a `<link rel="alternate" type="text/markdown" href="...">` tag to e
 
 - The first line is an H1 with the site `title`. If there is no `title`, the line is only `#`.
 - A blockquote with the site `description` follows. If there is no `description`, there is no blockquote.
-- Each H2 section is one collection. The heading is the collection label with its first letter in uppercase, for example `Posts`, `Pages`, or `Garden`. `Posts` comes first, then `Pages`, then the other collections in alphanumeric order. A section with no entries does not appear.
+- Each H2 section is one collection. The heading is the collection label with its first letter in uppercase, for example `Posts`, `Pages`, or `YourCollection`. `Posts` comes first, then `Pages`, then the other collections in alphanumeric order. A section with no entries does not appear.
 - In each section, entries are in date order, newest first. Entries with the same date are in order of their source path.
 - Each entry is `- [name](url): notes`.
   - `name` is the title that Jekyll stored for the page. Jekyll gives posts and collection documents a title from the filename when front matter has no title. A page without a title uses its filename, for example `about.md`.
@@ -127,7 +126,7 @@ If that path is already where Jekyll wrote a page, a post, or a static file, the
 
 `llms-full.txt` is a common extension, not part of the llms.txt proposal. This plugin writes the sidecar text of each included Markdown page, in the same order as `llms.txt`. HTML source files are not included. The plugin removes line breaks at the end of each page and puts one blank line between pages.
 
-In the root file, pages have no headings added. In a category or collection file, each page starts with an H1 of its title.
+The file starts with an H1 of the site, category, or collection title. Each page starts with an H2 of its title.
 
 ### Category and Collection Files
 
@@ -184,7 +183,7 @@ When you set `exclude_paths`, your list replaces the default list. Copy the defa
 
 ### Custom Scopes
 
-A scope is one group of pages with its own `llms.txt` and `llms-full.txt`. You can add scopes from a plugin in your site's `_plugins` directory, for example for tags, authors, or other archives.
+A scope is one group of pages with its own `llms.txt` and (optionally) `llms-full.txt`. You can add scopes from a plugin in your site's `_plugins` directory, for example for tags, authors, or other archives.
 
 This example makes a scope for each tag, in the directories that jekyll-archives uses for tag pages:
 
@@ -230,7 +229,7 @@ The plugin adds the tag only to pages that have a sidecar, and only when the pag
 
 ### Links Use the Wrong Host
 
-Links are built from `url` and `baseurl` in `_config.yml`. Set `url` to the address of your published site. `jekyll serve` changes `url` to the local server address, so check the output of `jekyll build` for production links.
+Links are the page path, with `url` and `baseurl` in front when those are set. `jekyll serve` sets `url` to the local server address.
 
 ## Development
 

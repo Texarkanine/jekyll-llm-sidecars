@@ -164,13 +164,14 @@ RSpec.describe JekyllLlmSidecars::Generator do
 
       expect(read_dest(site, "/llms-full.txt")).to eq(
         [
-          "Later body.\n",
-          "Alpha excerpt.\n",
-          "Beta excerpt.\n\nMore.\n",
-          "Hello {{ page.title }}\n",
-          "Hello Liquid\n",
-          "Page body.\n",
-          "Garden body.\n"
+          "# The Blog",
+          "## Later\n\nLater body.\n",
+          "## Alpha\n\nAlpha excerpt.\n",
+          "## Beta\n\nBeta excerpt.\n\nMore.\n",
+          "## Frozen\n\nHello {{ page.title }}\n",
+          "## Liquid\n\nHello Liquid\n",
+          "## my-page.md\n\nPage body.\n",
+          "## Note\n\nGarden body.\n"
         ].map { |body| body.sub(/\n+\z/, "") }.join("\n\n")
       )
       expect(read_dest(site, "/liquid.md")).to eq("Hello Liquid\n")
@@ -192,7 +193,7 @@ RSpec.describe JekyllLlmSidecars::Generator do
         "llm_sidecars" => { "create_llms_full" => true }
       )
 
-      expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
+      expect(read_dest(site, "/llms-full.txt")).to eq("## A\n\nA\n\n## B\n\nB")
     end
 
     it "joins sidecar bodies that do not end in a newline with two newlines" do
@@ -205,7 +206,7 @@ RSpec.describe JekyllLlmSidecars::Generator do
         "llm_sidecars" => { "create_llms_full" => true }
       )
 
-      expect(read_dest(site, "/llms-full.txt")).to eq("A\n\nB")
+      expect(read_dest(site, "/llms-full.txt")).to eq("## A\n\nA\n\n## B\n\nB")
     end
 
     it "starts each document in a category corpus with that document's title" do
@@ -218,7 +219,8 @@ RSpec.describe JekyllLlmSidecars::Generator do
         "llm_sidecars" => { "create_llms_full" => true, "include_categories" => true }
       )
 
-      expect(read_dest(site, "/category/essay/llms-full.txt")).to eq("# Beta\n\nB\n\n# Alpha\n\nA")
+      expect(read_dest(site, "/category/essay/llms-full.txt")).to eq("# essay\n\n## Beta\n\nB\n\n## Alpha\n\nA")
+      expect(read_dest(site, "/llms-full.txt")).to eq("## Beta\n\nB\n\n## Alpha\n\nA")
     end
 
     it "runs the body computer once per Markdown document" do

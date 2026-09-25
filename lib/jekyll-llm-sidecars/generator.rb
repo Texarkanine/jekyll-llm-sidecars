@@ -61,14 +61,17 @@ module JekyllLlmSidecars
     end
 
     def corpus_text(row)
-      ordered_entries(row.entries).map { |entry| corpus_block(entry, row.scope) }.join("\n\n")
+      blocks = ordered_entries(row.entries).map { |entry| corpus_block(entry) }
+      body = blocks.join("\n\n")
+      title = row.scope.title.to_s
+      return body if title.empty?
+
+      "# #{title}\n\n#{body}"
     end
 
-    def corpus_block(entry, scope)
+    def corpus_block(entry)
       body = entry.body.sub(/\n+\z/, "")
-      return body if scope.path_prefix == "/"
-
-      "# #{entry.summary.name}\n\n#{body}"
+      "## #{entry.summary.name}\n\n#{body}"
     end
 
     def index_text(scope, site, sidecar_paths)
