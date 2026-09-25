@@ -1,17 +1,22 @@
-FAIL
+PASS
 
-QA review of sidecar-liquid-cache (Level 1), 2026-09-24.
+# QA Validation Findings — sidecar-liquid-cache (rework)
 
-Blocking:
-1. Documentation - memory-bank/systemPatterns.md line 9 still says "The body slot calls `Jekyll::Renderer#render_liquid`." The build replaced that call with `Liquid::Template.parse(content, line_numbers: true).render!(payload, info)`. The systemPatterns rule requires a surgical fix when completed work invalidates content; this line now misdescribes the exact mechanism this task changed and would mislead any future work touching `Body`.
+## Scope Reviewed
+Full task diff (151fe3d..7e0deb0): `lib/jekyll-llm-sidecars/body.rb`, `spec/body_spec.rb`, `memory-bank/systemPatterns.md`.
 
-Advisories (non-blocking):
-1. Liquid parse warnings are no longer logged. Jekyll's `render_liquid` logs `template.warnings` via `Jekyll.logger.warn`; the new code drops them. Strict modes still raise (covered by specs); only non-strict diagnostics are quieter.
-2. On Liquid error, Jekyll's `render_liquid` logs a formatted "Liquid Exception" with the document path before re-raising. The new code raises raw - same failure semantics, less path context in the message.
-3. `--profile` stats no longer count sidecar renders (Jekyll's increment_count/bytes/time are bypassed). Arguably more correct; negligible.
+## Verification
+- `bundle exec rspec`: 143 examples, 0 failures, 100% line coverage.
+- `bundle exec rubocop lib spec`: 25 files inspected, no offenses.
+- Independently confirmed parity with Jekyll 4.4.1's `Jekyll::Renderer#render_liquid` by reading `lib/jekyll/renderer.rb` and `lib/jekyll/liquid_renderer/file.rb` in the installed gem: `Liquid::Template.parse(content, line_numbers: true).render!(payload, info)` is byte-for-byte the same parse/render call Jekyll's own `LiquidRenderer::File#parse` makes, minus the `@renderer.cache[@filename] ||=` memoization — which is exactly the cache write this task needed to remove.
 
-Verified:
-- Requirements 1-4 and acceptance criteria 1-3 all met. Regression spec matches the brief: Liquid tag + fence, `:pre_render` rewrites the fence, HTML contains the rewrite, sidecar keeps the fence with Liquid expanded.
-- Parse options parity with Jekyll (`line_numbers: true`); payload/registers parity; `reset_template_assigns` not needed (fresh template per call).
-- No remaining callers of the removed path; KISS/DRY/YAGNI clean; no debris.
-- Re-ran verification: RSpec 143 examples, 0 failures, 100% line coverage; RuboCop 27 files, no offenses.
+## Findings
+
+- **Completeness — no blocking gap.** All four requirements and three acceptance criteria in `projectbrief.md` are met: direct `Liquid::Template.parse`/`render!`, no `site.liquid_renderer.file` call, work stays in `generate` (via `Census.call` → `Body.call`, which the `Generator` runs before any `:pre_render` hook fires), and the `:pre_render` regression proves the HTML gets the rewrite while the sidecar keeps `T\n\nFENCE\n`.
+- **Documentation — resolved.** `memory-bank/systemPatterns.md` now reads "The body slot calls `Liquid::Template.parse` and `render!`. It does not use `site.liquid_renderer`," closing the prior FAIL. README has no references to the old mechanism, so no further doc updates are needed.
+- **Regression design — sound.** The `:pre_render` fixture rewrites a fence via a generic hook (not Mermaid-specific), matching the constraint that this gem stays agnostic of `jekyll-mermaid-prebuild`. The hook is registered and torn down (`ensure` block) without leaking state across examples.
+- **KISS/DRY/YAGNI — clean.** `Body.render_liquid` is a minimal, direct translation of Jekyll's own render call; no new abstractions, no unused parameters, no speculative branches.
+- **Advisory (carried over from prior QA, non-blocking):** the new path silently drops three things Jekyll's `render_liquid` normally does — `Liquid::Warning` logging, `Jekyll.logger.error`-formatted exception messages before re-raise, and a `stats_table` entry consulted by `--profile`. These are acceptable trade-offs for a generator-phase render that intentionally bypasses Jekyll's document-path renderer, and were already weighed and accepted in the prior QA round with no code change requested.
+
+## Verdict
+PASS. No rework required. Advisories stand as accepted trade-offs, not blockers.

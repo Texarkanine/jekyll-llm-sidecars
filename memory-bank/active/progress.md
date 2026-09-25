@@ -44,3 +44,13 @@ Stop the sidecar from parsing a document into Jekyll's path-keyed Liquid cache d
     - Documentation only. No code change. The three QA advisories stay as they are
 * Insights
     - The persistent pattern file is what a later reader uses to find the render path, so the old `Renderer#render_liquid` sentence was the blocking miss
+
+## 2026-09-24 - QA - COMPLETE (PASS)
+
+* Work completed
+    - Re-reviewed `body.rb`, `body_spec.rb`, and `systemPatterns.md` against the brief; re-ran RSpec (143 examples, 0 failures, 100% coverage) and RuboCop (clean)
+    - Independently re-confirmed parity between `Body.render_liquid` and Jekyll's `render_liquid` by reading `renderer.rb` and `liquid_renderer/file.rb` in the installed Jekyll 4.4.1 gem
+* Decisions made
+    - PASS. The round-1 documentation blocker is resolved; the three advisories (dropped warnings, unformatted error re-raise, sidecar renders absent from `--profile`) stand as accepted trade-offs with no further action
+* Insights
+    - `Liquid::Template.parse(content, line_numbers: true).render!(payload, info)` is exactly Jekyll's own parse/render call minus the `@renderer.cache[@filename] ||=` memoization, which is the one line this task needed to remove
