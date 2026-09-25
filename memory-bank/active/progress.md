@@ -35,3 +35,12 @@ Stop the sidecar from parsing a document into Jekyll's path-keyed Liquid cache d
     - Three advisories accepted as-is: dropped Liquid warning logs, raw (unformatted) error re-raise, sidecar renders absent from `--profile` stats
 * Insights
     - The implementation itself is minimal and correct; the only gap is the memory bank describing the mechanism this task replaced
+
+## 2026-09-24 - BUILD - COMPLETE
+
+* Work completed
+    - Replaced the stale sentence in `memory-bank/systemPatterns.md`: the body slot calls `Liquid::Template.parse` and `render!` and does not use `site.liquid_renderer`
+* Decisions made
+    - Documentation only. No code change. The three QA advisories stay as they are
+* Insights
+    - The persistent pattern file is what a later reader uses to find the render path, so the old `Renderer#render_liquid` sentence was the blocking miss

@@ -13,7 +13,7 @@ Files: `lib/jekyll-llm-sidecars/body.rb`, `spec/body_spec.rb`.
 
 ## QA Result: FAIL
 
-- [ ] Blocking: `memory-bank/systemPatterns.md` still says the body slot calls `Jekyll::Renderer#render_liquid` - update that line to describe the direct `Liquid::Template.parse`/`render!` render (Build must rerun for this one-line doc fix)
+- [x] Blocking: `memory-bank/systemPatterns.md` now says the body slot calls `Liquid::Template.parse` and `render!` and does not use `site.liquid_renderer`
 - Advisory: Liquid parse warnings no longer logged; Liquid errors raise without Jekyll's path-formatted log line; `--profile` stats skip sidecar renders
 
 Code, tests (143 examples, 0 failures), and RuboCop verified clean. Full findings in `.qa-validation-status`.

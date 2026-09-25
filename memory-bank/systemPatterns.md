@@ -6,7 +6,7 @@
 
 `Entry.new` returns the entry already registered for that document object. `Census.call` clears the table at the start of each build, so a later build does not keep the previous entry. A second `Entry.new` for the same object does not install new computers.
 
-The body slot calls `Jekyll::Renderer#render_liquid`. The Markdown converter and the layout do not run.
+The body slot calls `Liquid::Template.parse` and `render!`. It does not use `site.liquid_renderer`. The Markdown converter and the layout do not run.
 
 Generated files are destination output. `Generator#generate` stores each path and its content, and sets `JekyllLlmSidecars.current_destinations` to the absolute destination paths. Those files are not members of `site.static_files`. Jekyll cleans the destination before it writes, and the clean hook receives only the obsolete path list, so the hook removes `current_destinations` from that list. `:site, :post_write` then writes the stored files. A path omitted from the list is left for the cleaner to delete.
 
