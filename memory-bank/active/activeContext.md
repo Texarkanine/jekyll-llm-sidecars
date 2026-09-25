@@ -1,11 +1,12 @@
 # Active Context
 
 ## Current Task: sidecar-liquid-cache
-**Phase:** COMPLEXITY-ANALYSIS - COMPLETE
+**Phase:** BUILD - COMPLETE
 
 ## What Was Done
-- Classified as Level 1. The bug is in `JekyllLlmSidecars::Body`: it Liquid-renders through Jekyll's path-keyed template cache during `generate`, so a later `:pre_render` content rewrite is ignored for documents that contain Liquid.
-- The fix stays in that one class. The regression simulates the rewrite hook. Mermaid-prebuild is the discovery, not the change.
+- `Body` Liquid-renders with `Liquid::Template.parse` and `render!`. It no longer calls `site.liquid_renderer.file`.
+- A regression registers a `:pre_render` hook that rewrites a fence. The HTML contains the rewrite. The sidecar body is `T\n\nFENCE\n`.
+- Full RSpec suite: 143 examples, 0 failures. RuboCop: 27 files, no offenses.
 
 ## Next Step
-- Load the Level 1 workflow and build.
+- Level 1 QA.

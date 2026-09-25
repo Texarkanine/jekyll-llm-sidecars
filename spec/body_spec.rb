@@ -76,12 +76,34 @@ RSpec.describe JekyllLlmSidecars::Body do
       expect(described_class.call(page)).to eq("\n")
     end
 
-    it "records the document path on the liquid renderer" do
+    it "does not store the document template in the site liquid cache" do
       site = build_site("docs/marked.md" => "---\ntitle: T\n---\n{{ page.title }}\n")
       page = site.pages.find { |candidate| candidate.name == "marked.md" }
 
       expect(described_class.call(page)).to eq("T\n")
-      expect(site.liquid_renderer.stats_table).to include(page.path)
+      expect(site.liquid_renderer.cache).to be_empty
+    end
+
+    it "lets a pre_render rewrite reach HTML while the sidecar keeps the fence" do
+      hook = lambda do |site, _payload|
+        (site.pages + site.documents).each do |item|
+          next unless item.content&.include?("FENCE")
+
+          item.content = item.content.gsub("FENCE", "REWRITTEN")
+        end
+      end
+      Jekyll::Hooks.register(:site, :pre_render, &hook)
+      site = process_site(
+        {
+          "_layouts/default.html" => "<html><body>{{ content }}</body></html>\n",
+          "marked.md" => "---\nlayout: default\ntitle: T\n---\n{{ page.title }}\n\nFENCE\n"
+        }
+      )
+
+      expect(read_dest(site, "/marked.html")).to include("REWRITTEN")
+      expect(read_dest(site, "/marked.md")).to eq("T\n\nFENCE\n")
+    ensure
+      Jekyll::Hooks.instance_variable_get(:@registry)[:site][:pre_render].delete(hook)
     end
 
     it "returns the source when render_with_liquid is false" do

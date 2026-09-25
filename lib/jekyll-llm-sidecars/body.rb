@@ -22,7 +22,7 @@ module JekyllLlmSidecars
         strict_filters: liquid["strict_filters"],
         strict_variables: liquid["strict_variables"]
       }
-      Jekyll::Renderer.new(item.site, item).render_liquid(content, payload, info, item.path)
+      Liquid::Template.parse(content, line_numbers: true).render!(payload, info)
     end
     private_class_method :render_liquid
   end

@@ -1,0 +1,1 @@
+Body Liquid-renders with Liquid::Template.parse and render!. It does not call site.liquid_renderer.file, so a later :pre_render content rewrite still reaches HTML.
