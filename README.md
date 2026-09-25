@@ -15,7 +15,7 @@ Language models read Markdown more easily than HTML pages full of navigation, st
 - A `<link rel="alternate" type="text/markdown">` tag in each page's `<head>` that points to its sidecar.
 - Optional `/llms-full.txt`: the text of all included pages in one file.
 - Optional `llms.txt` and `llms-full.txt` files for each category and each collection. Category files follow [jekyll-archives](https://github.com/jekyll/jekyll-archives) permalinks when that plugin is configured.
-- A Ruby hook to add your own groups, for example one file set for each tag.
+- A Ruby hook to add your own groups, if you have custom collections outside the default & what `jekyll-archives` provides (i.e. tags, authors, etc).
 - A front matter setting to leave out a page.
 
 ## Requirements
