@@ -1,5 +1,6 @@
 # jekyll-llm-sidecars
 
+[![Gem Version](https://badge.fury.io/rb/jekyll-llm-sidecars.svg)](https://rubygems.org/gems/jekyll-llm-sidecars)
 [![code coverage](https://codecov.io/gh/Texarkanine/jekyll-llm-sidecars/graph/badge.svg)](https://codecov.io/gh/Texarkanine/jekyll-llm-sidecars)
 
 Publish an [`llms.txt`](https://llmstxt.org/) index and Markdown copies of your pages when Jekyll builds your site.
