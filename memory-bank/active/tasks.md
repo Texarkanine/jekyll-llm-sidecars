@@ -81,7 +81,7 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 3. Replace the product-context Key Benefits sentence and the Key Constraints bullet that say a sidecar is only the source body with the preamble rule. Keep the sentence that Liquid runs unless `render_with_liquid` is false.
 4. In system patterns, state that the sidecar file is the preamble plus the body slot, and the corpus reads the body slot only.
 
-### 4. Devblog build — validation
+### 4. Devblog build — validation ✓
 
 - Files: `devblog` `Gemfile` and `Gemfile.lock`, temporary, then restored. Do not commit either repository's validation edit.
 - No tests: the behaviors above are already specified. This step runs the site build the operator asked for.
@@ -125,5 +125,5 @@ No new technology - validation not required.
 - [x] Technology validation complete
 - [x] Pre-Mortem complete
 - [x] Preflight
-- [ ] Build
+- [x] Build
 - [ ] QA

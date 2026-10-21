@@ -1,0 +1,1 @@
+Sidecar files start with an H1 of the index title. Posts add YYYY-MM-DD, and ' - author' when author is a non-blank string. Subtitle, categories, tags, and description stay off. llms-full.txt uses the body slot only, under its own H2.

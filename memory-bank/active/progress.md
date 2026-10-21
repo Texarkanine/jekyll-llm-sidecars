@@ -49,6 +49,19 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
 * Insights
     - With `timezone: America/Chicago`, `2020-01-02 23:00:00 -0500` is stored as `2020-01-02 22:00:00 -0600`.
 
+## 2026-10-21 - BUILD - COMPLETE
+
+* Work completed
+    - Added `Preamble` and prepended it in `Generator#render_row` for sidecar rows.
+    - Updated the README, product context, and system patterns.
+    - Built the devblog against the local gem. Lintel's sidecar starts with the title and `2026-10-20 - niko`. Pink margarine's sidecar has the title, the date, and `texarkanine`, and not the subtitle. Restored the devblog Gemfile and lockfile.
+    - RSpec 157 examples, 0 failures. RuboCop clean.
+* Decisions made
+    - Date text is `strftime("%Y-%m-%d")` on Jekyll's stored Time, the same day Liquid prints.
+    - Author is included only for posts, and only when it is a string containing non-whitespace.
+* Insights
+    - `Jekyll::Document` has no `name` method. The untitled-post example finds the document by `relative_path`. Jekyll still stores the slug title `Later` on `data["title"]`.
+
 ## 2026-10-21 - PREFLIGHT - COMPLETE
 
 * Work completed
