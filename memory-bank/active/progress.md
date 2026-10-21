@@ -42,8 +42,27 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
 ## 2026-10-21 - PREFLIGHT - COMPLETE
 
 * Work completed
+    - Second preflight returned PASS WITH ADVISORY. The Chicago date example matches Jekyll 4.4.1.
+    - Folded the advisories into the plan: the README Features bullet, the Liquid sentence in the constraints, and use-case 1.
+* Decisions made
+    - Keep `Preamble` as its own class. A `meta` field on `Summary::Line` waits until something other than the sidecar reads that line.
+* Insights
+    - With `timezone: America/Chicago`, `2020-01-02 23:00:00 -0500` is stored as `2020-01-02 22:00:00 -0600`.
+
+## 2026-10-21 - PREFLIGHT - COMPLETE
+
+* Work completed
     - Ran the Level 2 preflight. The first line of `.preflight-status` is `FAIL (fixable)`.
 * Decisions made
     - The offset-date behavior and the challenges bullet have to change before build. `strftime` on the Time Jekyll stored matches Liquid's civil day. It does not keep a `-0500` evening on the authored calendar day once `Utils.parse_date` has called `localtime`.
 * Insights
     - Under `TZ=UTC`, Jekyll 4.4.1 stores `2020-01-02 23:00:00 -0500` as `2020-01-03 04:00:00 +0000`. CI and the devblog deploy both build on GitHub Actions, which is UTC. The filename-date example and the lintel noon timestamp stay on their calendar days.
+
+## 2026-10-21 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Re-ran the Level 2 preflight on the revised plan. The first line of `.preflight-status` is `PASS WITH ADVISORY`.
+* Decisions made
+    - The offset-date example can stand. With `timezone: America/Chicago`, Jekyll 4.4.1 stores `2020-01-02 23:00:00 -0500` as `2020-01-02 22:00:00 -0600`, and both `strftime("%Y-%m-%d")` and Liquid's `date` filter return `2020-01-02`.
+* Insights
+    - `Jekyll.configuration` sets `ENV["TZ"]` and does not restore it. The example's `ensure` is the restore. `strftime` uses the offset already on the Time, so restoring `TZ` does not move the civil day.

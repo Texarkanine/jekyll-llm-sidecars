@@ -8,7 +8,7 @@ As a reader of a Jekyll site, I want the Markdown sidecar to keep the heading-li
 
 ### Use-Case 1
 
-A reader opens a post's HTML page on a vanilla Jekyll site with a run-of-the-mill theme, sees the title, the date, and on some posts a subtitle, then opens the Markdown sidecar and still sees those introducing lines. The title is an H1.
+A reader opens a post's HTML page on a vanilla Jekyll site with a run-of-the-mill theme, sees the title and the date, and on some posts a subtitle, then opens the Markdown sidecar. The sidecar has the title as an H1 and the date. The subtitle stays on the HTML page. The README records why the sidecar omits it.
 
 ### Use-Case 2
 

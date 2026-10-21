@@ -76,9 +76,9 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 - Files: `README.md`, `memory-bank/productContext.md`, `memory-bank/systemPatterns.md`
 - No tests: prose/policy artifact
 
-1. In the README Sidecars section, state the H1, the post meta line, the omissions (subtitle, categories, tags, description), and that the source body is otherwise unchanged. In the output table, replace the sidecar cell "Markdown source of each included Markdown page" so it names the preamble.
+1. In the README Features bullet and the Sidecars section, state the H1, the post meta line, the omissions (subtitle, categories, tags, description), and that the source body is otherwise unchanged. The Features bullet today says "the Markdown source of that page." In the output table, replace the sidecar cell "Markdown source of each included Markdown page" so it names the preamble.
 2. In the README `llms-full.txt` section, say the corpus uses the rendered source body and its own H2, and does not repeat the sidecar preamble.
-3. Replace the product-context Key Benefits sentence and the Key Constraints bullet that say a sidecar is only the source body with the preamble rule.
+3. Replace the product-context Key Benefits sentence and the Key Constraints bullet that say a sidecar is only the source body with the preamble rule. Keep the sentence that Liquid runs unless `render_with_liquid` is false.
 4. In system patterns, state that the sidecar file is the preamble plus the body slot, and the corpus reads the body slot only.
 
 ### 4. Devblog build — validation
@@ -124,6 +124,6 @@ No new technology - validation not required.
 - [x] Implementation plan complete
 - [x] Technology validation complete
 - [x] Pre-Mortem complete
-- [ ] Preflight
+- [x] Preflight
 - [ ] Build
 - [ ] QA
