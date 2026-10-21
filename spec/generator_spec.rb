@@ -159,6 +159,22 @@ RSpec.describe JekyllLlmSidecars::Generator do
       expect(read_dest(site, "/garden/llms.txt")).to eq(garden_index)
     end
 
+    it "writes a post sidecar with the title and the filename date" do
+      site = process_site(files, config)
+
+      expect(read_dest(site, "/2020/01/04/later.md")).to eq("# Later\n\n2020-01-04\n\nLater body.\n")
+    end
+
+    it "keeps a source H1 under the preamble" do
+      site = process_site(
+        { "_posts/2020-01-04-echo.md" => "---\ntitle: Echo\n---\n# Echo\n\nAfter.\n" },
+        "url" => "https://example.com",
+        "permalink" => "/:year/:month/:day/:title:output_ext"
+      )
+
+      expect(read_dest(site, "/2020/01/04/echo.md")).to eq("# Echo\n\n2020-01-04\n\n# Echo\n\nAfter.\n")
+    end
+
     it "writes sidecars and joins corpus bodies with two newlines" do
       site = process_site(files, config)
 
@@ -174,9 +190,9 @@ RSpec.describe JekyllLlmSidecars::Generator do
           "## Note\n\nGarden body.\n"
         ].map { |body| body.sub(/\n+\z/, "") }.join("\n\n")
       )
-      expect(read_dest(site, "/liquid.md")).to eq("Hello Liquid\n")
-      expect(read_dest(site, "/frozen.md")).to eq("Hello {{ page.title }}\n")
-      expect(read_dest(site, "/my-page.md")).to eq("Page body.\n")
+      expect(read_dest(site, "/liquid.md")).to eq("# Liquid\n\nHello Liquid\n")
+      expect(read_dest(site, "/frozen.md")).to eq("# Frozen\n\nHello {{ page.title }}\n")
+      expect(read_dest(site, "/my-page.md")).to eq("# my-page.md\n\nPage body.\n")
       head = read_dest(site, "/my-page.html")[%r{<head>.*?</head>}m]
       expect(head).to include(
         '<link rel="alternate" type="text/markdown" href="https://example.com/blog/my-page.md">'
@@ -246,7 +262,7 @@ RSpec.describe JekyllLlmSidecars::Generator do
       expect(text).to include("](https://example.com/a.html)")
       expect(text).to include("](https://example.com/z.md)")
       expect(File.exist?(File.join(site.dest, "a.md"))).to be false
-      expect(read_dest(site, "/z.md")).to eq("Z\n")
+      expect(read_dest(site, "/z.md")).to eq("# Z\n\nZ\n")
     end
 
     it "joins a missing baseurl as an empty string" do

@@ -12,7 +12,7 @@ Language models read Markdown more easily than HTML pages full of navigation, st
 ## Features
 
 - `/llms.txt`: an index of your posts and pages in the llms.txt format.
-- Sidecars: a `.md` file next to each HTML page, with the Markdown source of that page.
+- Sidecars: a `.md` file next to each HTML page. It starts with the page title. A post also has its date, and its author when that is a non-blank string. The Markdown source follows.
 - A `<link rel="alternate" type="text/markdown">` tag in each page's `<head>` that points to its sidecar.
 - Optional `/llms-full.txt`: the text of all included pages in one file.
 - Optional `llms.txt` and `llms-full.txt` files for each category and each collection. Category files follow [jekyll-archives](https://github.com/jekyll/jekyll-archives) permalinks when that plugin is configured.
@@ -90,7 +90,7 @@ The plugin writes these files into your built site:
 | File | Default | Contents |
 | --- | --- | --- |
 | `/llms.txt` | On | Index of all included pages |
-| Sidecars (`*.md`) | On | Markdown source of each included Markdown page |
+| Sidecars (`*.md`) | On | Title, and for a post its date and author, then the Markdown source |
 | `/llms-full.txt` | Off | Text of all included Markdown pages in one file |
 | `llms.txt` and `llms-full.txt` in each category or collection directory | Off | The same files, limited to that category or collection |
 
@@ -111,7 +111,7 @@ The plugin does not change titles, write excerpts, or escape characters in link 
 
 ### Sidecars
 
-A sidecar is the source of a Markdown page, not a conversion of its HTML. The plugin removes the front matter and renders Liquid. To keep Liquid tags as written, set `render_with_liquid: false` in the page's front matter.
+A sidecar is the source of a Markdown page, not a conversion of its HTML. It starts with an H1 of the same title the index uses. A page with no title uses its filename, as the index does. A post then has one line with its date as `YYYY-MM-DD`. When the post's `author` is a non-blank string, that line is `YYYY-MM-DD - author`. Pages do not get that line. `subtitle` is not added. It is not a predefined Jekyll field, and a run-of-the-mill post header does not show it. Categories, tags, and `description` are not added. The source body follows, with the front matter removed and Liquid rendered. To keep Liquid tags as written, set `render_with_liquid: false` in the page's front matter.
 
 A source file is Markdown when its extension is in the site's `markdown_ext` list. Jekyll's default list is `markdown`, `mkdown`, `mkdn`, `mkd`, and `md`. HTML source files get no sidecar.
 
@@ -125,7 +125,7 @@ If that path is already where Jekyll wrote a page, a post, or a static file, the
 
 ### llms-full.txt
 
-`llms-full.txt` is a common extension, not part of the llms.txt proposal. This plugin writes the sidecar text of each included Markdown page, in the same order as `llms.txt`. HTML source files are not included. The plugin removes line breaks at the end of each page and puts one blank line between pages.
+`llms-full.txt` is a common extension, not part of the llms.txt proposal. This plugin writes the rendered source body of each included Markdown page, in the same order as `llms.txt`. It does not repeat the sidecar's title or post date. HTML source files are not included. The plugin removes line breaks at the end of each page and puts one blank line between pages.
 
 The file starts with an H1 of the site, category, or collection title. Each page starts with an H2 of its title.
 
