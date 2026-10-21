@@ -1,7 +1,7 @@
 # Active Context
 
 ## Current Task: Sidecar introducing headings
-**Phase:** BUILD - COMPLETE
+**Phase:** BUILD - COMPLETE (QA rework)
 
 ## What Was Done
 - `Preamble.call` builds the sidecar heading. `Generator#render_row` concatenates it for sidecar rows only. `Body.call` and the corpus stay on the source body.
@@ -29,4 +29,7 @@
 - `/home/mobaxterm/git/jekyll-llm-sidecars/memory-bank/systemPatterns.md`
 
 ## Next Step
-- QA review.
+- QA review again.
+
+## Rework
+- The Sidecars section now says `subtitle` is not a predefined Jekyll field, and a run-of-the-mill post header does not show it.

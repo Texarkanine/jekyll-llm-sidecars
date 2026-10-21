@@ -62,6 +62,22 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
 * Insights
     - `Jekyll::Document` has no `name` method. The untitled-post example finds the document by `relative_path`. Jekyll still stores the slug title `Later` on `data["title"]`.
 
+## 2026-10-21 - QA - FAIL
+
+* Work completed
+    - QA compared the sidecar text to the brief and the plan.
+* Decisions made
+    - Return to build for a README sentence. No code change and no new test.
+* Insights
+    - Acceptance criterion 2 requires the README to say why a subtitle is omitted, not only that it is omitted.
+
+## 2026-10-21 - BUILD - COMPLETE
+
+* Work completed
+    - The README Sidecars section now says `subtitle` is not a predefined Jekyll field, and a run-of-the-mill post header does not show it.
+* Decisions made
+    - Categories, tags, and description stay in the same omission sentence, without a second reason.
+
 ## 2026-10-21 - PREFLIGHT - COMPLETE
 
 * Work completed
@@ -79,3 +95,13 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
     - The offset-date example can stand. With `timezone: America/Chicago`, Jekyll 4.4.1 stores `2020-01-02 23:00:00 -0500` as `2020-01-02 22:00:00 -0600`, and both `strftime("%Y-%m-%d")` and Liquid's `date` filter return `2020-01-02`.
 * Insights
     - `Jekyll.configuration` sets `ENV["TZ"]` and does not restore it. The example's `ensure` is the restore. `strftime` uses the offset already on the Time, so restoring `TZ` does not move the civil day.
+
+## 2026-10-21 - QA - COMPLETE
+
+* Work completed
+    - Reviewed `Preamble`, `Generator#render_row`, the specs, the README, product context, and system patterns against the plan and the brief.
+    - Wrote `memory-bank/active/.qa-validation-status` as `FAIL`.
+* Decisions made
+    - FAIL (fixable). Build must rerun. The code can stay. The README must say why a subtitle is omitted.
+* Insights
+    - The Sidecars section lists the omission and does not give the reason acceptance criterion 2 names: `subtitle` is not a predefined Jekyll field, and a run-of-the-mill post header does not show it.

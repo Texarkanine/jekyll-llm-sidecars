@@ -111,7 +111,7 @@ The plugin does not change titles, write excerpts, or escape characters in link 
 
 ### Sidecars
 
-A sidecar is the source of a Markdown page, not a conversion of its HTML. It starts with an H1 of the same title the index uses. A page with no title uses its filename, as the index does. A post then has one line with its date as `YYYY-MM-DD`. When the post's `author` is a non-blank string, that line is `YYYY-MM-DD - author`. Pages do not get that line. `subtitle`, categories, tags, and `description` are not added. The source body follows, with the front matter removed and Liquid rendered. To keep Liquid tags as written, set `render_with_liquid: false` in the page's front matter.
+A sidecar is the source of a Markdown page, not a conversion of its HTML. It starts with an H1 of the same title the index uses. A page with no title uses its filename, as the index does. A post then has one line with its date as `YYYY-MM-DD`. When the post's `author` is a non-blank string, that line is `YYYY-MM-DD - author`. Pages do not get that line. `subtitle` is not added. It is not a predefined Jekyll field, and a run-of-the-mill post header does not show it. Categories, tags, and `description` are not added. The source body follows, with the front matter removed and Liquid rendered. To keep Liquid tags as written, set `render_with_liquid: false` in the page's front matter.
 
 A source file is Markdown when its extension is in the site's `markdown_ext` list. Jekyll's default list is `markdown`, `mkdown`, `mkdn`, `mkd`, and `md`. HTML source files get no sidecar.
 

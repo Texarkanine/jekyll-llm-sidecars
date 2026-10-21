@@ -126,4 +126,12 @@ No new technology - validation not required.
 - [x] Pre-Mortem complete
 - [x] Preflight
 - [x] Build
-- [ ] QA
+- [ ] QA — first run FAIL (fixable). The Sidecars section now states the subtitle reason. Rerun QA.
+
+## QA Result
+
+FAIL (fixable). `/niko-build` must rerun. The preamble code matches the plan. The README does not meet acceptance criterion 2.
+
+1. **Documentation — blocks.** The Sidecars section says `subtitle`, categories, tags, and `description` are not added. Use-case 1 and acceptance criterion 2 require the README to record why a subtitle is omitted: it is not a predefined Jekyll field, and a run-of-the-mill post header does not show it. Add that reason in the Sidecars section. No code change. No new test: this is the prose contract.
+2. **Features bullet — does not block.** The bullet states the title, the post date, and the author. The Sidecars section states the H1 and the omission list. Leave the bullet.
+3. **DRY — does not block.** `Preamble.author_text` repeats the private `Summary.present_string` check (`String` and `/\S/`). Leave it. Making that helper public would widen `Summary` for one caller.
