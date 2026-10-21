@@ -115,3 +115,14 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
     - PASS. The Sidecars section now states why a subtitle is omitted. No build rerun.
 * Insights
     - `Preamble.author_text` still duplicates the private `Summary.present_string` check. Each copy stays private to its class.
+
+## 2026-10-21 - REFLECT - COMPLETE
+
+* Work completed
+    - Wrote `memory-bank/active/reflection/reflection-sidecar-preamble.md`.
+    - Reconciled the persistent files. Product context and system patterns already carry the preamble contract. Tech context did not change.
+* Decisions made
+    - Keep the preamble as a render-time prefix. Do not move the meta line onto `Summary::Line`.
+* Insights
+    - Jekyll's stored date is already in the machine zone. The HTML day and the sidecar day are that stored Time.
+    - A prose step has to name the sentence an acceptance criterion requires, not only the topic.
