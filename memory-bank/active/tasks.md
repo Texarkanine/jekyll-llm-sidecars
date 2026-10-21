@@ -10,8 +10,8 @@ Markdown sidecars gain the introducing lines a vanilla Jekyll post layout shows.
 
 Stock introducing lines, from Jekyll's predefined front matter and the post layout in the official blogging tutorial (`h1` title, then `date - author`):
 
-- **Title.** H1, every sidecar. The text is `Summary.line(item).name` (front matter title, otherwise the filename the index already uses). An empty name is a bare `#`, matching an empty site title on `llms.txt`.
-- **Date.** Posts only. One line, `YYYY-MM-DD`, from `item.data["date"]` after Jekyll has read the post (filename date counts). Format with `strftime` on that value so a `-0500` evening stays on that calendar day.
+- **Title.** H1, every sidecar. The text is `"# #{Summary.line(item).name}"` (front matter title, otherwise the filename the index already uses). No empty-name branch.
+- **Date.** Posts only. One line, `YYYY-MM-DD`, from `item.data["date"]` after Jekyll has read the post (filename date counts). Format with `strftime` on the Time Jekyll stored. `Jekyll::Utils.parse_date` is `Time.parse(input).localtime`, so the authored offset is already gone and the civil day is the machine zone, which is the same day Liquid's date filter prints.
 - **Author.** Posts only, and only when `item.data["author"]` is a string that contains a non-whitespace character. The line is `YYYY-MM-DD - author`. No author: the date alone. Author is not read from site config.
 - **Subtitle.** Omit. Not predefined ([Jekyll front matter](https://jekyllrb.com/docs/front-matter/)). Minima and the tutorial layout do not render it. The devblog does, from its own layout. Omitting it is the defensible choice. A later addition would be a plain paragraph under the H1 and above the date, not an H2.
 - **Also omit.** Categories and tags (predefined, but not the header), `description` (already the index note), collection labels, and theme articles such as "a" / "an".
@@ -27,8 +27,9 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 - Page with `date` and `author` in front matter → still no meta line.
 - Post with a filename date and no author → meta line is that `YYYY-MM-DD` only.
 - Post with a string author → meta line is `YYYY-MM-DD - author`.
-- Post date `2020-01-02 23:00:00 -0500` → meta date is `2020-01-02`.
-- Post author blank, or not a string → date only.
+- Post date `2020-01-02 23:00:00 -0500` with site `timezone: America/Chicago` → meta date equals `{{ page.date | date: "%Y-%m-%d" }}` on that same document, and that string is `2020-01-02`. Save `ENV["TZ"]` before the build and restore it in an `ensure`: write the saved value back, or `ENV.delete("TZ")` when it was unset.
+- Post author `""` or `" "` → date only.
+- Post author a YAML list → date only. `Preamble.call` still runs.
 - Post with `subtitle`, categories, tags, and `description` whose body does not contain those strings → sidecar does not contain them.
 - Site config `author` does not appear when the post has no author.
 - Post body that already starts with the same H1 → both headings remain.
@@ -75,9 +76,9 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 - Files: `README.md`, `memory-bank/productContext.md`, `memory-bank/systemPatterns.md`
 - No tests: prose/policy artifact
 
-1. In the README Sidecars section, state the H1, the post meta line, the omissions (subtitle, categories, tags, description), and that the source body is otherwise unchanged.
+1. In the README Sidecars section, state the H1, the post meta line, the omissions (subtitle, categories, tags, description), and that the source body is otherwise unchanged. In the output table, replace the sidecar cell "Markdown source of each included Markdown page" so it names the preamble.
 2. In the README `llms-full.txt` section, say the corpus uses the rendered source body and its own H2, and does not repeat the sidecar preamble.
-3. Replace the product-context sentence that says a sidecar is only the source body with the preamble rule.
+3. Replace the product-context Key Benefits sentence and the Key Constraints bullet that say a sidecar is only the source body with the preamble rule.
 4. In system patterns, state that the sidecar file is the preamble plus the body slot, and the corpus reads the body slot only.
 
 ### 4. Devblog build — validation
@@ -88,7 +89,7 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 1. Point the `jekyll-llm-sidecars` line in the devblog `Gemfile` at `path: "../jekyll-llm-sidecars"`.
 2. `bundle install` in the devblog, then `bundle exec jekyll build`.
 3. Read `_site/2026/10/20/lintel.md`. It starts with the title H1, then `2026-10-20 - niko`, then the first body paragraph. It does not contain the category article "a fable".
-4. Read the built sidecar for `blog/essay/_posts/2026-03-01-pink-margarine.md`. It has the title, the date, and `texarkanine`. It does not have `In Memoriam: Software Licensing (1980-2026)`.
+4. Read `_site/2026/03/01/pink-margarine.md`. It has the title, `2026-03-01`, and `texarkanine`. It does not have `In Memoriam: Software Licensing (1980-2026)`.
 5. Restore the devblog `Gemfile` and `Gemfile.lock` with git. Leave that working tree as it was.
 
 ## Technology Validation
@@ -102,7 +103,7 @@ No new technology - validation not required.
 
 ## Challenges & Mitigations
 
-- A `-0500` date rendered in the machine zone rolls the calendar day: format with `strftime("%Y-%m-%d")` on the Time Jekyll stored, and lock it with the `23:00:00 -0500` example.
+- Jekyll stores `Time.parse(input).localtime`, so `strftime` does not preserve an authored offset. The `23:00:00 -0500` example sets `timezone: America/Chicago`, expects the meta date to equal Liquid's `date: "%Y-%m-%d"` on that document (`2020-01-02`), and restores `ENV["TZ"]` in an `ensure`.
 - Preamble inside `Body.call` would duplicate the title under the corpus H2 and change every body-slot assertion: concatenation stays in `Generator#render_row` for `:sidecar`. Existing corpus `eq` strings are the regression.
 - An author array or a blank string would print garbage: only a string that matches `/\S/` is used.
 - The devblog `Gemfile.lock` will change during the path install: restore both files in their own git command after the build, including when the build fails.

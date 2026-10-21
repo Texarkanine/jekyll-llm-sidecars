@@ -26,3 +26,24 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
     - The preamble is concatenated in `Generator#render_row` for sidecar rows. `Body.call` and the corpus stay on the source body.
 * Insights
     - `llms-full.txt` already prefixes each page with an H2 of its title. Putting the new H1 into the body slot would print the title twice.
+
+## 2026-10-21 - PLAN - COMPLETE
+
+* Work completed
+    - Revised the plan after preflight `FAIL (fixable)`.
+* Decisions made
+    - The offset-date example sets `timezone: America/Chicago` and expects the meta date to equal Liquid's `date: "%Y-%m-%d"` (`2020-01-02`). `strftime` runs on the Time Jekyll stored. `ENV["TZ"]` is restored in an `ensure`.
+    - Blank author and non-string author are separate examples. No empty-name branch.
+    - Docs step also updates the README sidecar table cell and the product-context constraints bullet. The built pink-margarine sidecar is `_site/2026/03/01/pink-margarine.md`.
+    - Acceptance criterion 2 now says a `subtitle` is not added, and the README records why.
+* Insights
+    - Jekyll 4.4.1 `Utils.parse_date` is `Time.parse(input).localtime`. On UTC CI, `2020-01-02 23:00:00 -0500` is stored as `2020-01-03`. Lintel's noon `-0500` timestamp stays `2026-10-20`.
+
+## 2026-10-21 - PREFLIGHT - COMPLETE
+
+* Work completed
+    - Ran the Level 2 preflight. The first line of `.preflight-status` is `FAIL (fixable)`.
+* Decisions made
+    - The offset-date behavior and the challenges bullet have to change before build. `strftime` on the Time Jekyll stored matches Liquid's civil day. It does not keep a `-0500` evening on the authored calendar day once `Utils.parse_date` has called `localtime`.
+* Insights
+    - Under `TZ=UTC`, Jekyll 4.4.1 stores `2020-01-02 23:00:00 -0500` as `2020-01-03 04:00:00 +0000`. CI and the devblog deploy both build on GitHub Actions, which is UTC. The filename-date example and the lintel noon timestamp stay on their calendar days.

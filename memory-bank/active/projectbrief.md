@@ -32,7 +32,7 @@ The same reader opens a page that has no subtitle. The sidecar still has the tit
 ## Acceptance Criteria
 
 1. A sidecar for a document with a title begins with an H1 of that title.
-2. A sidecar for a document with a subtitle includes that subtitle in the chosen format.
+2. A sidecar for a document with a `subtitle` does not add that subtitle. The README records why: it is not a predefined Jekyll field, and a run-of-the-mill post header does not show it.
 3. Other heading-like introducing lines that a run-of-the-mill theme shows are either present, or their omission is an explicit recommendation recorded with the work.
 4. The lintel post, built through the devblog with this gem on disk, no longer opens the sidecar on the first body paragraph with the title absent.
 5. The gem's unit tests cover the new sidecar text.
