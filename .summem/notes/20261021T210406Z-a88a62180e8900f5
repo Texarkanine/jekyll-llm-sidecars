@@ -1,0 +1,1 @@
+CI reads .ruby-version via ruby/setup-ruby on ubuntu-latest. A new runner image only has the latest patch of each Ruby series, so an exact older patch 404s (3.4.7 vs 3.4.11 on ubuntu-26.04). Float ruby-version 3.4, or pin the runner image.
