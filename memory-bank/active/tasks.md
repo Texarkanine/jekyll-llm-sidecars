@@ -46,7 +46,7 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 
 ## Implementation Plan
 
-### 1. Preamble — executable
+### 1. Preamble — executable ✓
 
 - Files: `lib/jekyll-llm-sidecars/preamble.rb`, `lib/jekyll-llm-sidecars.rb`, `spec/preamble_spec.rb`
 
