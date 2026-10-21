@@ -56,7 +56,8 @@ module JekyllLlmSidecars
       when :corpus
         corpus_text(row)
       when :sidecar
-        row.entries.first.body
+        entry = row.entries.first
+        "#{Preamble.call(entry.item)}#{entry.body}"
       end
     end
 

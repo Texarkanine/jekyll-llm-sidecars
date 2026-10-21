@@ -101,7 +101,7 @@ RSpec.describe JekyllLlmSidecars::Body do
       )
 
       expect(read_dest(site, "/marked.html")).to include("REWRITTEN")
-      expect(read_dest(site, "/marked.md")).to eq("T\n\nFENCE\n")
+      expect(read_dest(site, "/marked.md")).to eq("# T\n\nT\n\nFENCE\n")
     ensure
       Jekyll::Hooks.instance_variable_get(:@registry)[:site][:pre_render].delete(hook)
     end

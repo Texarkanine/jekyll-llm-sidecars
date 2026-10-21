@@ -55,7 +55,7 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
 3. Write tests and run red: build a site per example, find the page or post, and `eq` `Preamble.call(item)` to the heading block.
 4. Write code and run green: implement `Preamble.call` from `Summary.line` for the H1 and from post `data["date"]` / string `data["author"]` for the meta line. Do not read `subtitle`, categories, tags, description, or site author.
 
-### 2. Sidecar file — executable
+### 2. Sidecar file — executable ✓
 
 - Files: `lib/jekyll-llm-sidecars/generator.rb`, `spec/generator_spec.rb`, `spec/body_spec.rb`
 
@@ -71,7 +71,7 @@ The preamble is concatenated in `Generator#render_row` for `:sidecar` only. `Bod
    - Corpus strings in `spec/generator_spec.rb` stay exactly as they are, including `## Later\n\nLater body.\n` with no date.
 4. Write code and run green: in `render_row`, for `:sidecar`, return `Preamble.call(entry.item)` concatenated with `entry.body`. Do not change `Body.call` or `corpus_block`.
 
-### 3. Contract text — prose/policy
+### 3. Contract text — prose/policy ✓
 
 - Files: `README.md`, `memory-bank/productContext.md`, `memory-bank/systemPatterns.md`
 - No tests: prose/policy artifact
