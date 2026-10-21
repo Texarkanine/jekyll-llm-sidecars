@@ -1,9 +1,1 @@
-FAIL
-
-The preamble matches the plan. Acceptance criterion 2 still fails.
-
-The README Sidecars section says `subtitle`, categories, tags, and `description` are not added. It does not record why a subtitle is omitted: it is not a predefined Jekyll field, and a run-of-the-mill post header does not show it. Use-case 1 and acceptance criterion 2 require that reason in the README. Build adds it there. No code change, and no new test: the contract text is prose.
-
-The Features bullet states the title, the post date, and the author, and leaves the H1 and the omission list to the Sidecars section. That can stay.
-
-`Preamble.author_text` repeats the private `Summary.present_string` check. Leave it.
+PASS

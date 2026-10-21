@@ -105,3 +105,13 @@ Markdown sidecars drop the introducing lines a reader sees on the HTML page. The
     - FAIL (fixable). Build must rerun. The code can stay. The README must say why a subtitle is omitted.
 * Insights
     - The Sidecars section lists the omission and does not give the reason acceptance criterion 2 names: `subtitle` is not a predefined Jekyll field, and a run-of-the-mill post header does not show it.
+
+## 2026-10-21 - QA - COMPLETE
+
+* Work completed
+    - Reviewed `Preamble`, `Generator#render_row`, the specs, the README, product context, and system patterns against the plan and acceptance criterion 2.
+    - Wrote `memory-bank/active/.qa-validation-status` as `PASS`.
+* Decisions made
+    - PASS. The Sidecars section now states why a subtitle is omitted. No build rerun.
+* Insights
+    - `Preamble.author_text` still duplicates the private `Summary.present_string` check. Each copy stays private to its class.
