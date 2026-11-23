@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/Texarkanine/jekyll-llm-sidecars/compare/v0.3.0...v0.3.1) (2026-11-23)
+
+
+### Bug Fixes
+
+* **ci:** let the lockfile job commit inside the Ruby image ([#13](https://github.com/Texarkanine/jekyll-llm-sidecars/issues/13)) ([e1e12ef](https://github.com/Texarkanine/jekyll-llm-sidecars/commit/e1e12ef3cbc519d1a12076eb80061fc0a75d4dcc))
+
 ## [0.3.0](https://github.com/Texarkanine/jekyll-llm-sidecars/compare/v0.2.0...v0.3.0) (2026-10-21)
 
 
